@@ -1,5 +1,5 @@
 [package]
-name = "wicwiu_rust"
+name = "wicwiu"
 version = "0.1.0"
 authors = ["cmpark0126 <cmpark0126@gmail.com>"]
 edition = "2018"
