@@ -1,2 +1,2 @@
 pub mod tensor;
-pub mod module;
+pub mod modules;
