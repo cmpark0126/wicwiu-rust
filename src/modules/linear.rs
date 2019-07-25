@@ -1,4 +1,4 @@
-use crate::modules;
+use crate::modules::Module;
 
 #[derive(Debug)]
 pub struct Linear{
@@ -11,12 +11,14 @@ impl Linear {
     }
 }
 
-impl modules::Module for Linear {
-    fn forward(&self) {
+impl Module for Linear {
+    fn forward(&self) -> &Module{
         println!("forward for Linear : use_bias = {}", self.use_bias);
+        self
     }
 
-    fn backward(&self) {
+    fn backward(&self) -> &Module{
         println!("backward for Linear : use_bias = {}", self.use_bias);
+        self
     }
 }

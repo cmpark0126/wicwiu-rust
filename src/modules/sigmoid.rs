@@ -1,4 +1,4 @@
-pub use crate::modules;
+pub use crate::modules::Module;
 
 #[derive(Debug)]
 pub struct Sigmoid{}
@@ -9,12 +9,14 @@ impl Sigmoid {
     }
 }
 
-impl modules::Module for Sigmoid {
-    fn forward(&self) {
+impl Module for Sigmoid {
+    fn forward(&self) -> &Module{
         println!("forward for Sigmoid");
+        self
     }
 
-    fn backward(&self) {
+    fn backward(&self) -> &Module{
         println!("backward for Sigmoid");
+        self
     }
 }

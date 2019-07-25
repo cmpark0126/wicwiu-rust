@@ -1,4 +1,4 @@
 pub trait Module {
-    fn forward(&self);
-    fn backward(&self);
+    fn forward(&self) -> &Module;
+    fn backward(&self) -> &Module;
 }
