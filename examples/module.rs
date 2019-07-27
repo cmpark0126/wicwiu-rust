@@ -1,12 +1,13 @@
-use wicwiu::modules::{Module, Tensorholder, MSE};
+use wicwiu::modules::{Module, Tensorholder, MSE, Linear};
 
 fn main() {
-    let th = Tensorholder::<f32>::new(vec![]);
-    let mse = MSE::<f32>::new(&th);
+    let w : &Module<f32> = &Tensorholder::<f32>::new(vec![3, 4]);
+    let x : &Module<f32> = &Tensorholder::<f32>::new(vec![4]);
+    let linear : &Module<f32> = &Linear::<f32>::new(w, x);
+    let mse : &Module<f32> = &MSE::<f32>::new(linear);
 
-    let th_module: &Module<f32> = &th;
-    let mse_module: &Module<f32> = &mse;
-
-    println!("{:?}", th_module.result());
-    println!("{:?}", mse_module.result());
+    println!("{:?}", w.result());
+    println!("{:?}", x.result());
+    println!("{:?}", linear.result());
+    println!("{:?}", mse.result());
 }

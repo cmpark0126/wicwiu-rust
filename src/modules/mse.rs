@@ -12,6 +12,12 @@ impl<T> MSE<T>
 where T: Numeric + Clone + Display + Debug
 {
     pub fn new(input: &Module<T>) -> MSE<T>{
+        let t = input.result();
+
+        if t.shape.rank > 1 {
+            panic!("Rank of input result tensor is less than 2, but got {}.", t.shape.rank);
+        }
+        
         MSE{result: input.result().clone()}
     }
 }
