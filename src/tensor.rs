@@ -10,17 +10,14 @@ pub struct Tensor<T>{
 
 impl<T: Numeric + Clone + Display + Debug> Tensor<T>{
     #[inline]
-    pub fn zeros(dim: Option<Vec<usize>>) -> Tensor<T>{
+    pub fn zeros(dim: Vec<usize>) -> Tensor<T>{
         let shape = Shape::new(dim);
         let mut capacity = 1;
 
-        match &shape.dim {
-            None => {},
-            Some(v) => {
-                for i in v {
-                    capacity *= i;
-                }
-            },
+        let dim = &shape.dim;
+
+        for i in dim {
+            capacity *= i;
         }
 
         let longarray : Vec<T> = vec![T::zero(); capacity];

@@ -10,7 +10,7 @@ pub struct MSE<T>{
 
 impl<T: Numeric + Clone + Display + Debug> MSE<T> {
     pub fn new() -> MSE<T>{
-        MSE{result: Tensor::zeros(None)}
+        MSE{result: Tensor::zeros(vec![])}
     }
 }
 
