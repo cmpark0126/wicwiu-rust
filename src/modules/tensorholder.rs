@@ -32,4 +32,8 @@ where T: Numeric + Clone + Display + Debug
     fn result(&self) -> &Tensor<T>{
         &self.result
     }
+
+    fn is_tensorholder(&self) -> bool{
+        true
+    }
 }

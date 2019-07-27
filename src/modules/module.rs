@@ -5,4 +5,8 @@ pub trait Module<T> {
     fn backward(&self);
 
     fn result(&self) -> &Tensor<T>;
+
+    fn is_tensorholder(&self) -> bool{
+        false
+    }
 }
