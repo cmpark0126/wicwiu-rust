@@ -22,3 +22,22 @@ fn shape_define() {
 fn shape_define_panic_case() {
     let s = Shape::new(2, Some(vec![1]));
 }
+
+#[test]
+fn shape_clone() {
+    let s = Shape::new(0, None);
+    let s_clone = s.clone();
+
+    drop(s);
+
+    assert_eq!(s_clone.rank, 0);
+    assert_eq!(s_clone.dim, None);
+
+    let s = Shape::new(1, Some(vec![1]));
+    let s_clone = s.clone();
+
+    drop(s);
+
+    assert_eq!(s_clone.rank, 1);
+    assert_eq!(s_clone.dim, Some(vec![1]));
+}
