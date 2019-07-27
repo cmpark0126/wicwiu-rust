@@ -4,27 +4,29 @@ use crate::modules::Module;
 use crate::tensor::Tensor;
 
 #[derive(Debug)]
-pub struct MSE<T>{
-    result: Tensor<T>
+pub struct Tensorholder<T>{
+    result: Tensor<T>,
 }
 
-impl<T> MSE<T>
+impl<T> Tensorholder<T>
 where T: Numeric + Clone + Display + Debug
 {
-    pub fn new(input: &Module<T>) -> MSE<T>{
-        MSE{result: input.result().clone()}
+    pub fn new(dim: Vec<T>) -> Tensorholder<T>{
+        Tensorholder{
+            result: Tensor::<T>::zeros(dim)
+        }
     }
 }
 
-impl<T> Module<T> for MSE<T>
+impl<T> Module<T> for Tensorholder<T>
 where T: Numeric + Clone + Display + Debug
 {
     fn forward(&self){
-        println!("forward for MSE");
+        panic!("forward for Tensorholder is unnecessory");
     }
 
     fn backward(&self){
-        println!("backward for MSE");
+        panic!("backward for Tensorholder is unnecessory");
     }
 
     fn result(&self) -> &Tensor<T>{

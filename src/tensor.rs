@@ -8,7 +8,9 @@ pub struct Tensor<T>{
     pub longarray: Vec<T>,
 }
 
-impl<T: Numeric + Clone + Display + Debug> Tensor<T>{
+impl<T> Tensor<T>
+where T: Numeric + Clone + Display + Debug
+{
     #[inline]
     pub fn zeros(dim: Vec<usize>) -> Tensor<T>{
         let shape = Shape::new(dim);
@@ -29,7 +31,9 @@ impl<T: Numeric + Clone + Display + Debug> Tensor<T>{
     }
 }
 
-impl<T: Numeric + Clone + Display + Debug> Display for Tensor<T>{
+impl<T> Display for Tensor<T>
+where T: Numeric + Clone + Display + Debug
+{
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "({:#?}, {:#?})", self.shape, self.longarray)
     }
