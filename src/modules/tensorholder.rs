@@ -11,7 +11,7 @@ pub struct Tensorholder<T>{
 impl<T> Tensorholder<T>
 where T: Numeric + Clone + Display + Debug
 {
-    pub fn new(dim: Vec<T>) -> Tensorholder<T>{
+    pub fn new(dim: Vec<usize>) -> Tensorholder<T>{
         Tensorholder{
             result: Tensor::<T>::zeros(dim)
         }

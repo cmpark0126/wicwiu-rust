@@ -7,10 +7,6 @@ pub struct Shape{
 
 impl Shape{
     pub fn new(dim: Vec<usize>) -> Shape{
-        // match dim {
-        //     None => Shape {rank: 0, dim: None},
-        //     Some(v) => Shape {rank: v.len(), dim: Some(v)},
-        // }
         Shape {rank: dim.len(), dim: dim}
     }
 }
