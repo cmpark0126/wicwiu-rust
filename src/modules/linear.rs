@@ -5,7 +5,9 @@ use crate::tensor::Tensor;
 
 #[derive(Debug)]
 pub struct Linear<T>{
-    result: Tensor<T>
+    result: Tensor<T>,
+    in_features: usize,
+    out_features: usize,
 }
 
 impl<T> Linear<T>
@@ -29,7 +31,11 @@ where T: Numeric + Clone + Display + Debug
             panic!("");
         }
 
-        Linear{result: Tensor::<T>::zeros(vec![w_d[0].clone()])}
+        Linear{
+            result: Tensor::<T>::zeros(vec![w_d[0].clone()]),
+            in_features: i_d[0].clone(),
+            out_features: w_d[0].clone(),
+        }
     }
 }
 
