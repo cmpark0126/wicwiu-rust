@@ -17,7 +17,7 @@ where T: Numeric + Clone + Display + Debug
         if t.shape.rank > 1 {
             panic!("Rank of input result tensor is less than 2, but got {}.", t.shape.rank);
         }
-        
+
         MSE{result: input.result().clone()}
     }
 }
@@ -35,5 +35,9 @@ where T: Numeric + Clone + Display + Debug
 
     fn result(&self) -> &Tensor<T>{
         &self.result
+    }
+
+    fn result_mut(&mut self) -> &mut Tensor<T>{
+        &mut self.result
     }
 }

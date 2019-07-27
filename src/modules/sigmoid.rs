@@ -20,14 +20,18 @@ impl<T> Module<T> for Sigmoid<T>
 where T: Numeric + Clone + Display + Debug
 {
     fn forward(&self){
-        println!("forward for MSE");
+        println!("forward for Sigmoid");
     }
 
     fn backward(&self){
-        println!("backward for MSE");
+        println!("backward for Sigmoid");
     }
 
     fn result(&self) -> &Tensor<T>{
         &self.result
+    }
+
+    fn result_mut(&mut self) -> &mut Tensor<T>{
+        &mut self.result
     }
 }

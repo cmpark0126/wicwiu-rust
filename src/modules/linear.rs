@@ -53,4 +53,8 @@ where T: Numeric + Clone + Display + Debug
     fn result(&self) -> &Tensor<T>{
         &self.result
     }
+
+    fn result_mut(&mut self) -> &mut Tensor<T>{
+        &mut self.result
+    }
 }

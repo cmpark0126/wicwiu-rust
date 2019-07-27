@@ -5,7 +5,7 @@ use crate::tensor::Tensor;
 
 #[derive(Debug)]
 pub struct Tensorholder<T>{
-    result: Tensor<T>,
+    tensor: Tensor<T>,
 }
 
 impl<T> Tensorholder<T>
@@ -13,7 +13,7 @@ where T: Numeric + Clone + Display + Debug
 {
     pub fn new(dim: Vec<usize>) -> Tensorholder<T>{
         Tensorholder{
-            result: Tensor::<T>::zeros(dim)
+            tensor: Tensor::<T>::zeros(dim)
         }
     }
 }
@@ -30,7 +30,11 @@ where T: Numeric + Clone + Display + Debug
     }
 
     fn result(&self) -> &Tensor<T>{
-        &self.result
+        &self.tensor
+    }
+
+    fn result_mut(&mut self) -> &mut Tensor<T>{
+        &mut self.tensor
     }
 
     fn is_tensorholder(&self) -> bool{
