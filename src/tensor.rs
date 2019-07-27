@@ -6,6 +6,7 @@ use crate::shape::Shape;
 pub struct Tensor<T>{
     pub shape: Shape,
     pub longarray: Vec<T>,
+    pub gradient: Vec<T>,
 }
 
 impl<T> Tensor<T>
@@ -23,10 +24,12 @@ where T: Numeric + Clone + Display + Debug
         }
 
         let longarray : Vec<T> = vec![T::zero(); capacity];
+        let gradient : Vec<T> = longarray.clone();
 
         Tensor {
             shape: shape,
             longarray: longarray,
+            gradient: gradient,
         }
     }
 }
