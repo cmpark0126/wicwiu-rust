@@ -1,22 +1,29 @@
+use std::fmt::{Display, Debug};
+use crate::numeric::Numeric;
 use crate::modules::Module;
+use crate::tensor::Tensor;
 
 #[derive(Debug)]
-pub struct MSE{}
+pub struct MSE<T>{
+    result: Option<Tensor<T>>
+}
 
-impl MSE {
-    pub fn new() -> MSE{
-        MSE{}
+impl<T: Numeric + Clone + Display + Debug> MSE<T> {
+    pub fn new() -> MSE<T>{
+        MSE{result: None}
     }
 }
 
-impl Module for MSE {
-    fn forward(&self) -> &Module{
+impl<T: Numeric + Clone + Display + Debug> Module<T> for MSE<T> {
+    fn forward(&self) -> &Tensor<T>{
         println!("forward for MSE");
-        self
+        let t: Tensor<T> = Tensor::zeros(None);
+        &t
     }
 
-    fn backward(&self) -> &Module{
+    fn backward(&self) -> &Tensor<T>{
         println!("backward for MSE");
-        self
+        let t: Tensor<T> = Tensor::zeros(None);
+        &t
     }
 }
