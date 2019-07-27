@@ -6,16 +6,10 @@ pub struct Shape{
 }
 
 impl Shape{
-    pub fn new(rank: usize, dim: Option<Vec<usize>>) -> Shape{
+    pub fn new(dim: Option<Vec<usize>>) -> Shape{
         match dim {
-            None => Shape {rank: rank, dim: None},
-            Some(v) => {
-                if rank != v.len(){
-                    panic!("Guess rank and length of dimention vector must be equal to each other, \
-                            got rank = {}, length of dimention {}.", rank, v.len());
-                }
-                Shape {rank: rank, dim: Some(v)}
-            },
+            None => Shape {rank: 0, dim: None},
+            Some(v) => Shape {rank: v.len(), dim: Some(v)},
         }
     }
 }
