@@ -5,6 +5,7 @@ use crate::tensor::Tensor;
 
 // #[derive(Debug)]
 pub struct MSE<T>{
+    inputs: Vec<Box<dyn Module<T>>>,
     result: Tensor<T>,
     need_to_forward: bool,
     need_to_backward: bool,
@@ -20,8 +21,11 @@ where T: Numeric + Clone + Display + Debug
             panic!("Rank of input result tensor is less than 2, but got {}.", t.shape.rank);
         }
 
+        let result = input.result().clone();
+
         MSE{
-            result: input.result().clone(),
+            inputs: vec![input],
+            result: result,
             need_to_forward: true,
             need_to_backward: false,
         }
@@ -33,6 +37,16 @@ where T: Numeric + Clone + Display + Debug
 {
     fn forward(&mut self){
         println!("forward for MSE");
+    }
+
+    fn forward_prev_node(&mut self){
+        let input = &mut self.inputs[0];
+        if (input.is_tensorholder() == false) &&
+            (input.need_to_forward() == &true){
+                input.forward();
+                // self.inputs.pop()
+                // self.backward_list.push(input)
+        }
     }
 
     fn backward(&mut self){

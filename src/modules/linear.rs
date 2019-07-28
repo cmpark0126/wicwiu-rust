@@ -13,6 +13,8 @@ pub struct Linear<T> {
     out_features: usize,
     need_to_forward: bool,
     need_to_backward: bool,
+    // forward_ptrs: Vec<&'a Box<dyn Module<T>>>,
+    // backward_ptrs: Vec<&'a Box<dyn Module<T>>>,
 }
 
 impl<T> Linear<T>
@@ -24,7 +26,7 @@ where
         let bias = Tensor::<T>::zeros(vec![out_features]);
         let result = Tensor::<T>::zeros(vec![out_features]);
         Linear {
-            inputs: vec![input],
+            inputs: vec![input], // forward_list 추가할 때 need_to_forward 확인
             result: result,
             weight: weight,
             bias: bias,
@@ -32,6 +34,7 @@ where
             out_features: out_features,
             need_to_forward: true,
             need_to_backward: false,
+            // backward_ptrs: vec![],
         }
     }
 }
@@ -41,12 +44,19 @@ where
     T: Numeric + Clone + Display + Debug,
 {
     fn forward(&mut self) {
-        // let input = &self.inputs[0];
-        // if (input.is_tensorholder() == false) &&
-        //     (input.need_to_forward() == true){
-        //         input.forward();
-        // }
+        self.forward_prev_node();
+
         println!("forward for Linear");
+    }
+
+    fn forward_prev_node(&mut self){
+        let input = &mut self.inputs[0];
+        if (input.is_tensorholder() == false) &&
+            (input.need_to_forward() == &true){
+                input.forward();
+                // self.inputs.pop()
+                // self.backward_list.push(input)
+        }
     }
 
     fn backward(&mut self) {
