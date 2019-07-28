@@ -6,6 +6,5 @@ fn main() {
     let act = Sigmoid::<f32>::new(Box::new(linear));
     let mse : &Module<f32> = &MSE::<f32>::new(Box::new(act));
 
-    // println!("{:?}, \n{}", w.result(), w.is_tensorholder());
     println!("{:?}, \n{}", mse.result(), mse.is_tensorholder());
 }

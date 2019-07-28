@@ -5,7 +5,9 @@ use crate::tensor::Tensor;
 
 // #[derive(Debug)]
 pub struct MSE<T>{
-    result: Tensor<T>
+    result: Tensor<T>,
+    need_to_forward: bool,
+    need_to_backward: bool,
 }
 
 impl<T> MSE<T>
@@ -18,7 +20,11 @@ where T: Numeric + Clone + Display + Debug
             panic!("Rank of input result tensor is less than 2, but got {}.", t.shape.rank);
         }
 
-        MSE{result: input.result().clone()}
+        MSE{
+            result: input.result().clone(),
+            need_to_forward: true,
+            need_to_backward: false,
+        }
     }
 }
 
@@ -39,5 +45,19 @@ where T: Numeric + Clone + Display + Debug
 
     fn result_mut(&mut self) -> &mut Tensor<T>{
         &mut self.result
+    }
+
+    fn need_to_forward(&self) -> &bool{
+        &self.need_to_forward
+    }
+    fn need_to_forward_mut(&mut self) -> &mut bool{
+        &mut self.need_to_forward
+    }
+
+    fn need_to_backward(&self) -> &bool{
+        &self.need_to_backward
+    }
+    fn need_to_backward_mut(&mut self) -> &mut bool{
+        &mut self.need_to_forward
     }
 }
