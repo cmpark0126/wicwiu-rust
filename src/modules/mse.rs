@@ -3,7 +3,7 @@ use crate::numeric::Numeric;
 use crate::modules::Module;
 use crate::tensor::Tensor;
 
-#[derive(Debug)]
+// #[derive(Debug)]
 pub struct MSE<T>{
     result: Tensor<T>
 }
@@ -11,7 +11,7 @@ pub struct MSE<T>{
 impl<T> MSE<T>
 where T: Numeric + Clone + Display + Debug
 {
-    pub fn new(input: &Module<T>) -> MSE<T>{
+    pub fn new(input: Box<dyn Module<T>>) -> MSE<T>{
         let t = input.result();
 
         if t.shape.rank > 1 {
@@ -25,11 +25,11 @@ where T: Numeric + Clone + Display + Debug
 impl<T> Module<T> for MSE<T>
 where T: Numeric + Clone + Display + Debug
 {
-    fn forward(&self){
+    fn forward(&mut self){
         println!("forward for MSE");
     }
 
-    fn backward(&self){
+    fn backward(&mut self){
         println!("backward for MSE");
     }
 

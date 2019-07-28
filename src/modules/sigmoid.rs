@@ -3,7 +3,7 @@ use crate::numeric::Numeric;
 use crate::modules::Module;
 use crate::tensor::Tensor;
 
-#[derive(Debug)]
+// #[derive(Debug)]
 pub struct Sigmoid<T>{
     result: Tensor<T>
 }
@@ -11,7 +11,7 @@ pub struct Sigmoid<T>{
 impl<T> Sigmoid<T>
 where T: Numeric + Clone + Display + Debug
 {
-    pub fn new(input: &Module<T>) -> Sigmoid<T>{
+    pub fn new(input: Box<dyn Module<T>>) -> Sigmoid<T>{
         Sigmoid{result: input.result().clone()}
     }
 }
@@ -19,11 +19,11 @@ where T: Numeric + Clone + Display + Debug
 impl<T> Module<T> for Sigmoid<T>
 where T: Numeric + Clone + Display + Debug
 {
-    fn forward(&self){
+    fn forward(&mut self){
         println!("forward for Sigmoid");
     }
 
-    fn backward(&self){
+    fn backward(&mut self){
         println!("backward for Sigmoid");
     }
 

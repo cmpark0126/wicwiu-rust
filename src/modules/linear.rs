@@ -1,60 +1,54 @@
-use std::fmt::{Display, Debug};
-use crate::numeric::Numeric;
 use crate::modules::Module;
+use crate::numeric::Numeric;
 use crate::tensor::Tensor;
+use std::fmt::{Debug, Display};
 
-#[derive(Debug)]
-pub struct Linear<T>{
+// #[derive(Debug)]
+pub struct Linear<T> {
+    inputs: Vec<Box<dyn Module<T>>>,
     result: Tensor<T>,
+    weight: Tensor<T>,
+    bias: Tensor<T>,
     in_features: usize,
     out_features: usize,
 }
 
 impl<T> Linear<T>
-where T: Numeric + Clone + Display + Debug
+where
+    T: Numeric + Clone + Display + Debug + Sized,
 {
-    pub fn new(weight: &Module<T>, input: &Module<T>) -> Linear<T>{
-        let w_s = &weight.result().shape;
-        let i_s = &input.result().shape;
-
-        if w_s.rank != 2 || i_s.rank != 1 {
-            panic!("Rank of weight result tensor must be 2\
-                    and rank of input result tensor must be 1\
-                    , but got {}, {} respectively."
-                    , w_s.rank, i_s.rank);
-        }
-
-        let w_d = &w_s.dim;
-        let i_d = &i_s.dim;
-
-        if w_d[1] != i_d[0] {
-            panic!("");
-        }
-
-        Linear{
-            result: Tensor::<T>::zeros(vec![w_d[0].clone()]),
-            in_features: i_d[0].clone(),
-            out_features: w_d[0].clone(),
+    pub fn new(input: Box<dyn Module<T>>, in_features: usize, out_features: usize) -> Linear<T> {
+        let weight = Tensor::<T>::zeros(vec![out_features, in_features]);
+        let bias = Tensor::<T>::zeros(vec![out_features]);
+        let result = Tensor::<T>::zeros(vec![out_features]);
+        Linear {
+            inputs: vec![input],
+            result: result,
+            weight: weight,
+            bias: bias,
+            in_features: in_features,
+            out_features: out_features,
         }
     }
 }
 
 impl<T> Module<T> for Linear<T>
-where T: Numeric + Clone + Display + Debug
+where
+    T: Numeric + Clone + Display + Debug,
 {
-    fn forward(&self){
+    fn forward(&mut self) {
         println!("forward for Linear");
     }
 
-    fn backward(&self){
+    fn backward(&mut self) {
         println!("backward for Linear");
     }
 
-    fn result(&self) -> &Tensor<T>{
+    fn result(&self) -> &Tensor<T> {
         &self.result
     }
 
-    fn result_mut(&mut self) -> &mut Tensor<T>{
+    fn result_mut(&mut self) -> &mut Tensor<T> {
         &mut self.result
     }
 }

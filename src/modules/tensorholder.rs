@@ -21,11 +21,11 @@ where T: Numeric + Clone + Display + Debug
 impl<T> Module<T> for Tensorholder<T>
 where T: Numeric + Clone + Display + Debug
 {
-    fn forward(&self){
+    fn forward(&mut self){
         panic!("forward for Tensorholder is unnecessory");
     }
 
-    fn backward(&self){
+    fn backward(&mut self){
         panic!("backward for Tensorholder is unnecessory");
     }
 
