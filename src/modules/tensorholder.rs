@@ -1,8 +1,8 @@
 use crate::numeric::Numeric;
 use crate::modules::Module;
 use crate::tensor::Tensor;
-use std::rc::Rc;
-use std::cell::RefCell;
+// use std::rc::Rc;
+// use std::cell::RefCell;
 use std::fmt::{Display, Debug};
 
 #[derive(Debug)]
@@ -24,11 +24,11 @@ impl<T> Module<T> for Tensorholder<T>
 where T: Numeric + Clone + Display + Debug
 {
     fn forward(&mut self){
-        panic!("forward for Tensorholder is unnecessory");
+        // panic!("forward for Tensorholder is unnecessory");
     }
 
     fn backward(&mut self){
-        panic!("backward for Tensorholder is unnecessory");
+        // panic!("backward for Tensorholder is unnecessory");
     }
 
     fn result(&self) -> &Tensor<T>{

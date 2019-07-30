@@ -24,4 +24,10 @@ where T: Numeric + Clone + Display + Debug
         self.module_list.push(Rc::new(RefCell::new(module)));
         Rc::clone(&self.module_list[self.module_list.len() - 1])
     }
+
+    pub fn forward(&mut self){
+        for module in &self.module_list{
+            module.borrow_mut().forward();
+        }
+    }
 }
