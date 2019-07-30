@@ -13,11 +13,11 @@ pub struct Sigmoid<T>{
 impl<T> Sigmoid<T>
 where T: Numeric + Clone + Display + Debug
 {
-    pub fn new(input: Box<dyn Module<T>>) -> Sigmoid<T>{
-        let result = input.result().clone();
+    pub fn new(input: &Rc<RefCell<Box<dyn Module<T>>>>,) -> Sigmoid<T>{
+        let result = input.borrow().result().clone();
 
         Sigmoid{
-            inputs: vec![Rc::new(RefCell::new(input))],
+            inputs: vec![Rc::clone(input)],
             result: result,
         }
     }

@@ -19,12 +19,12 @@ impl<T> Linear<T>
 where
     T: Numeric + Clone + Display + Debug + Sized,
 {
-    pub fn new(input: Box<dyn Module<T>>, in_features: usize, out_features: usize) -> Linear<T> {
+    pub fn new(input: &Rc<RefCell<Box<dyn Module<T>>>>, in_features: usize, out_features: usize) -> Linear<T> {
         let weight = Tensor::<T>::zeros(vec![out_features, in_features]);
         let bias = Tensor::<T>::zeros(vec![out_features]);
         let result = Tensor::<T>::zeros(vec![out_features]);
         Linear {
-            inputs: vec![Rc::new(RefCell::new(input))],
+            inputs: vec![Rc::clone(input)],
             result: result,
             weight: weight,
             bias: bias,

@@ -13,17 +13,17 @@ pub struct MSE<T>{
 impl<T> MSE<T>
 where T: Numeric + Clone + Display + Debug
 {
-    pub fn new(input: Box<dyn Module<T>>) -> MSE<T>{
-        let t = input.result();
+    pub fn new(input: &Rc<RefCell<Box<dyn Module<T>>>>,) -> MSE<T>{
+        // let t = ;
 
-        if t.shape.rank > 1 {
-            panic!("Rank of input result tensor is less than 2, but got {}.", t.shape.rank);
+        if input.borrow().result().shape.rank > 1 {
+            panic!("Rank of input result tensor is less than 2, but got {}.", input.borrow().result().shape.rank);
         }
 
-        let result = input.result().clone();
+        let result = input.borrow().result().clone();
 
         MSE{
-            inputs: vec![Rc::new(RefCell::new(input))],
+            inputs: vec![Rc::clone(input)],
             result: result,
         }
     }
