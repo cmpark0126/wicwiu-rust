@@ -16,10 +16,6 @@ pub struct Linear<T> {
     bias: Tensor<T>,
     in_features: usize,
     out_features: usize,
-    need_to_forward: bool,
-    need_to_backward: bool,
-    // forward_ptrs: Vec<fn_ptr<T>>,
-    // backward_ptrs: Vec<&'a Box<dyn Module<T>>>,
 }
 
 impl<T> Linear<T>
@@ -37,10 +33,6 @@ where
             bias: bias,
             in_features: in_features,
             out_features: out_features,
-            need_to_forward: true,
-            need_to_backward: false,
-            // forward_ptrs: vec![input.forward],
-            // backward_ptrs: vec![],
         }
     }
 }

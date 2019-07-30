@@ -7,8 +7,6 @@ use crate::tensor::Tensor;
 pub struct Sigmoid<T>{
     inputs: Vec<Box<dyn Module<T>>>,
     result: Tensor<T>,
-    need_to_forward: bool,
-    need_to_backward: bool,
 }
 
 impl<T> Sigmoid<T>
@@ -20,8 +18,6 @@ where T: Numeric + Clone + Display + Debug
         Sigmoid{
             inputs: vec![input],
             result: result,
-            need_to_forward: true,
-            need_to_backward: false,
         }
     }
 }

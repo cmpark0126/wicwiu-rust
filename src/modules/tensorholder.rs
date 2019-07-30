@@ -6,8 +6,6 @@ use crate::tensor::Tensor;
 #[derive(Debug)]
 pub struct Tensorholder<T>{
     tensor: Tensor<T>,
-    need_to_forward: bool,
-    need_to_backward: bool,
 }
 
 impl<T> Tensorholder<T>
@@ -16,8 +14,6 @@ where T: Numeric + Clone + Display + Debug
     pub fn new(dim: Vec<usize>) -> Tensorholder<T>{
         Tensorholder{
             tensor: Tensor::<T>::zeros(dim),
-            need_to_forward: false,
-            need_to_backward: false,
         }
     }
 }
