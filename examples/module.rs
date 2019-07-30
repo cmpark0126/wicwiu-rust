@@ -15,4 +15,5 @@ fn main() {
     println!("{:?}, \n{}", mse.borrow().result(), mse.borrow().is_tensorholder());
 
     nn.forward();
+    nn.backward();
 }

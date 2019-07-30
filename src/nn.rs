@@ -30,4 +30,12 @@ where T: Numeric + Clone + Display + Debug
             module.borrow_mut().forward();
         }
     }
+
+    pub fn backward(&mut self){
+        let len = self.module_list.len();
+
+        for idx in (0..len).rev(){
+            &self.module_list[idx].borrow_mut().backward();
+        }
+    }
 }
