@@ -1,11 +1,12 @@
-use std::fmt::{Display, Debug};
 use crate::numeric::Numeric;
 use crate::modules::Module;
 use crate::tensor::Tensor;
+use std::rc::Rc;
+use std::cell::RefCell;
+use std::fmt::{Display, Debug};
 
-// #[derive(Debug)]
 pub struct MSE<T>{
-    inputs: Vec<Box<dyn Module<T>>>,
+    inputs: Vec<Rc<RefCell<Box<dyn Module<T>>>>>,
     result: Tensor<T>,
 }
 
@@ -22,7 +23,7 @@ where T: Numeric + Clone + Display + Debug
         let result = input.result().clone();
 
         MSE{
-            inputs: vec![input],
+            inputs: vec![Rc::new(RefCell::new(input))],
             result: result,
         }
     }

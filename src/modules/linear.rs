@@ -4,10 +4,7 @@ use crate::tensor::Tensor;
 use std::rc::Rc;
 use std::cell::RefCell;
 use std::fmt::{Debug, Display};
-// use std::cell::RefCell;
 
-// #[allow(non_camel_case_types)]
-// type fn_ptr<T> = fn(&Module<T>);
 // #[derive(Debug)]
 pub struct Linear<T> {
     inputs: Vec<Rc<RefCell<Box<dyn Module<T>>>>>,
@@ -27,7 +24,7 @@ where
         let bias = Tensor::<T>::zeros(vec![out_features]);
         let result = Tensor::<T>::zeros(vec![out_features]);
         Linear {
-            inputs: vec![Rc::new(RefCell::new(input))], // forward_list 추가할 때 need_to_forward 확인
+            inputs: vec![Rc::new(RefCell::new(input))],
             result: result,
             weight: weight,
             bias: bias,
