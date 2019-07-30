@@ -35,9 +35,6 @@ where T: Numeric + Clone + Display + Debug
         println!("forward for MSE");
     }
 
-    fn forward_prev_node(&mut self){
-    }
-
     fn backward(&mut self){
         println!("backward for MSE");
     }

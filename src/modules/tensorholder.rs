@@ -25,10 +25,6 @@ where T: Numeric + Clone + Display + Debug
         panic!("forward for Tensorholder is unnecessory");
     }
 
-    fn forward_prev_node(&mut self){
-        panic!("forward_prev_node for Tensorholder is unnecessory");
-    }
-
     fn backward(&mut self){
         panic!("backward for Tensorholder is unnecessory");
     }

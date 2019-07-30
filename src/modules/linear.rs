@@ -45,9 +45,6 @@ where
         println!("forward for Linear");
     }
 
-    fn forward_prev_node(&mut self){
-    }
-
     fn backward(&mut self) {
         println!("backward for Linear");
     }

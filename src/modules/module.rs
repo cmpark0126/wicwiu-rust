@@ -2,7 +2,6 @@ use crate::tensor::Tensor;
 
 pub trait Module<T> {
     fn forward(&mut self);
-    fn forward_prev_node(&mut self);
     fn backward(&mut self);
 
     fn result(&self) -> &Tensor<T>;
