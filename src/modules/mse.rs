@@ -40,13 +40,6 @@ where T: Numeric + Clone + Display + Debug
     }
 
     fn forward_prev_node(&mut self){
-        let input = &mut self.inputs[0];
-        if (input.is_tensorholder() == false) &&
-            (input.need_to_forward() == &true){
-                input.forward();
-                // self.inputs.pop()
-                // self.backward_list.push(input)
-        }
     }
 
     fn backward(&mut self){
@@ -59,19 +52,5 @@ where T: Numeric + Clone + Display + Debug
 
     fn result_mut(&mut self) -> &mut Tensor<T>{
         &mut self.result
-    }
-
-    fn need_to_forward(&self) -> &bool{
-        &self.need_to_forward
-    }
-    fn need_to_forward_mut(&mut self) -> &mut bool{
-        &mut self.need_to_forward
-    }
-
-    fn need_to_backward(&self) -> &bool{
-        &self.need_to_backward
-    }
-    fn need_to_backward_mut(&mut self) -> &mut bool{
-        &mut self.need_to_forward
     }
 }

@@ -48,18 +48,4 @@ where T: Numeric + Clone + Display + Debug
     fn is_tensorholder(&self) -> bool{
         true
     }
-
-    fn need_to_forward(&self) -> &bool{
-        &self.need_to_forward
-    }
-    fn need_to_forward_mut(&mut self) -> &mut bool{
-        &mut self.need_to_forward
-    }
-
-    fn need_to_backward(&self) -> &bool{
-        &self.need_to_backward
-    }
-    fn need_to_backward_mut(&mut self) -> &mut bool{
-        &mut self.need_to_forward
-    }
 }

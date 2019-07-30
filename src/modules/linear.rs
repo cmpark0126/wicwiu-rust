@@ -1,11 +1,16 @@
 use crate::modules::Module;
 use crate::numeric::Numeric;
 use crate::tensor::Tensor;
+use std::rc::Rc;
+use std::cell::RefCell;
 use std::fmt::{Debug, Display};
+// use std::cell::RefCell;
 
+// #[allow(non_camel_case_types)]
+// type fn_ptr<T> = fn(&Module<T>);
 // #[derive(Debug)]
 pub struct Linear<T> {
-    inputs: Vec<Box<dyn Module<T>>>,
+    inputs: Vec<Rc<RefCell<Box<dyn Module<T>>>>>,
     result: Tensor<T>,
     weight: Tensor<T>,
     bias: Tensor<T>,
@@ -13,7 +18,7 @@ pub struct Linear<T> {
     out_features: usize,
     need_to_forward: bool,
     need_to_backward: bool,
-    // forward_ptrs: Vec<&'a Box<dyn Module<T>>>,
+    // forward_ptrs: Vec<fn_ptr<T>>,
     // backward_ptrs: Vec<&'a Box<dyn Module<T>>>,
 }
 
@@ -26,7 +31,7 @@ where
         let bias = Tensor::<T>::zeros(vec![out_features]);
         let result = Tensor::<T>::zeros(vec![out_features]);
         Linear {
-            inputs: vec![input], // forward_list 추가할 때 need_to_forward 확인
+            inputs: vec![Rc::new(RefCell::new(input))], // forward_list 추가할 때 need_to_forward 확인
             result: result,
             weight: weight,
             bias: bias,
@@ -34,6 +39,7 @@ where
             out_features: out_features,
             need_to_forward: true,
             need_to_backward: false,
+            // forward_ptrs: vec![input.forward],
             // backward_ptrs: vec![],
         }
     }
@@ -44,19 +50,10 @@ where
     T: Numeric + Clone + Display + Debug,
 {
     fn forward(&mut self) {
-        self.forward_prev_node();
-
         println!("forward for Linear");
     }
 
     fn forward_prev_node(&mut self){
-        let input = &mut self.inputs[0];
-        if (input.is_tensorholder() == false) &&
-            (input.need_to_forward() == &true){
-                input.forward();
-                // self.inputs.pop()
-                // self.backward_list.push(input)
-        }
     }
 
     fn backward(&mut self) {
@@ -69,19 +66,5 @@ where
 
     fn result_mut(&mut self) -> &mut Tensor<T> {
         &mut self.result
-    }
-
-    fn need_to_forward(&self) -> &bool{
-        &self.need_to_forward
-    }
-    fn need_to_forward_mut(&mut self) -> &mut bool{
-        &mut self.need_to_forward
-    }
-
-    fn need_to_backward(&self) -> &bool{
-        &self.need_to_backward
-    }
-    fn need_to_backward_mut(&mut self) -> &mut bool{
-        &mut self.need_to_forward
     }
 }
