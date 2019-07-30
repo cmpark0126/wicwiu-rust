@@ -1,4 +1,5 @@
 use crate::numeric::Numeric;
+use crate::tensor::Tensor;
 use crate::modules::Module;
 use std::rc::Rc;
 use std::cell::RefCell;
@@ -21,18 +22,27 @@ where T: Numeric + Clone + Display + Debug
         self.module_list.push(Rc::new(RefCell::new(module)));
         Rc::clone(&self.module_list[self.module_list.len() - 1])
     }
+}
 
-    pub fn forward(&mut self){
+impl<T> Module<T> for NeuralNetwork<T>
+where
+    T: Numeric + Clone + Display + Debug,
+{
+    fn forward(&mut self){
         for module in &self.module_list{
             module.borrow_mut().forward();
         }
     }
 
-    pub fn backward(&mut self){
+    fn backward(&mut self){
         let len = self.module_list.len();
 
         for idx in (0..len).rev(){
             &self.module_list[idx].borrow_mut().backward();
         }
+    }
+
+    fn result(&self) -> Rc<RefCell<Tensor<T>>> {
+        Rc::clone(&self.module_list[self.module_list.len() - 1].borrow().result())
     }
 }
