@@ -5,7 +5,7 @@ use wicwiu::modules::*;
 fn main() {
     let mut x = Tensorholder::<f32>::new(vec![4]);
     let mut optim: Optimizer<f32> = Optimizer{parameter_list: vec![]};
-    let mut nn = NeuralNetwork::<f32>::new(optim);
+    let mut nn = NeuralNetwork::<f32>::new();
 
     let x_ref = nn.push(Box::new(x));
     let linear = nn.push(Box::new(Linear::<f32>::new(&x_ref, 4, 3)));
