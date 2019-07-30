@@ -7,18 +7,18 @@ use std::fmt::{Display, Debug};
 
 pub struct Sigmoid<T>{
     inputs: Vec<Rc<RefCell<Box<dyn Module<T>>>>>,
-    result: Tensor<T>,
+    result: Rc<RefCell<Tensor<T>>>,
 }
 
 impl<T> Sigmoid<T>
 where T: Numeric + Clone + Display + Debug
 {
     pub fn new(input: &Rc<RefCell<Box<dyn Module<T>>>>,) -> Sigmoid<T>{
-        let result = input.borrow().result().clone();
+        let result = input.borrow().result().borrow().clone();
 
         Sigmoid{
             inputs: vec![Rc::clone(input)],
-            result: result,
+            result: Rc::new(RefCell::new(result)),
         }
     }
 }
@@ -34,11 +34,11 @@ where T: Numeric + Clone + Display + Debug
         println!("backward for Sigmoid");
     }
 
-    fn result(&self) -> &Tensor<T>{
-        &self.result
+    fn result(&self) -> Rc<RefCell<Tensor<T>>> {
+        Rc::clone(&self.result)
     }
 
-    fn result_mut(&mut self) -> &mut Tensor<T>{
-        &mut self.result
-    }
+    // fn result_mut(&mut self) -> &mut Tensor<T>{
+    //     &mut self.result
+    // }
 }

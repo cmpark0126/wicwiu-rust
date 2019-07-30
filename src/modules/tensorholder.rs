@@ -1,13 +1,13 @@
 use crate::numeric::Numeric;
 use crate::modules::Module;
 use crate::tensor::Tensor;
-// use std::rc::Rc;
-// use std::cell::RefCell;
+use std::rc::Rc;
+use std::cell::RefCell;
 use std::fmt::{Display, Debug};
 
 #[derive(Debug)]
 pub struct Tensorholder<T>{
-    tensor: Tensor<T>,
+    tensor: Rc<RefCell<Tensor<T>>>,
 }
 
 impl<T> Tensorholder<T>
@@ -15,7 +15,7 @@ where T: Numeric + Clone + Display + Debug
 {
     pub fn new(dim: Vec<usize>) -> Tensorholder<T>{
         Tensorholder{
-            tensor: Tensor::<T>::zeros(dim),
+            tensor: Rc::new(RefCell::new(Tensor::<T>::zeros(dim))),
         }
     }
 }
@@ -31,15 +31,11 @@ where T: Numeric + Clone + Display + Debug
         // panic!("backward for Tensorholder is unnecessory");
     }
 
-    fn result(&self) -> &Tensor<T>{
-        &self.tensor
+    fn result(&self) -> Rc<RefCell<Tensor<T>>> {
+        Rc::clone(&self.tensor)
     }
 
-    fn result_mut(&mut self) -> &mut Tensor<T>{
-        &mut self.tensor
-    }
-
-    fn is_tensorholder(&self) -> bool{
-        true
-    }
+    // fn is_tensorholder(&self) -> bool{
+    //     true
+    // }
 }

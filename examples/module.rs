@@ -12,7 +12,7 @@ fn main() {
     let act = nn.push(Box::new(Sigmoid::<f32>::new(&linear)));
     let mse = nn.push(Box::new(MSE::<f32>::new(&act)));
 
-    println!("{:?}, \n{}", mse.borrow().result(), mse.borrow().is_tensorholder());
+    println!("{:?}, \n{}", mse.borrow().result().borrow(), mse.borrow().is_tensorholder());
 
     nn.forward();
     nn.backward();

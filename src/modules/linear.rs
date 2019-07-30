@@ -8,9 +8,9 @@ use std::fmt::{Debug, Display};
 // #[derive(Debug)]
 pub struct Linear<T> {
     inputs: Vec<Rc<RefCell<Box<dyn Module<T>>>>>,
-    result: Tensor<T>,
-    weight: Tensor<T>,
-    bias: Tensor<T>,
+    result: Rc<RefCell<Tensor<T>>>,
+    weight: Rc<RefCell<Tensor<T>>>,
+    bias: Rc<RefCell<Tensor<T>>>,
     in_features: usize,
     out_features: usize,
 }
@@ -25,9 +25,9 @@ where
         let result = Tensor::<T>::zeros(vec![out_features]);
         Linear {
             inputs: vec![Rc::clone(input)],
-            result: result,
-            weight: weight,
-            bias: bias,
+            result: Rc::new(RefCell::new(result)),
+            weight: Rc::new(RefCell::new(weight)),
+            bias: Rc::new(RefCell::new(bias)),
             in_features: in_features,
             out_features: out_features,
         }
@@ -46,11 +46,11 @@ where
         println!("backward for Linear");
     }
 
-    fn result(&self) -> &Tensor<T> {
-        &self.result
+    fn result(&self) -> Rc<RefCell<Tensor<T>>> {
+        Rc::clone(&self.result)
     }
 
-    fn result_mut(&mut self) -> &mut Tensor<T> {
-        &mut self.result
-    }
+    // fn result_mut(&mut self) -> &mut Rc<RefCell<Tensor<T>>> {
+    //     &mut self.result.borrow_mut()
+    // }
 }
