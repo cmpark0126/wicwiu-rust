@@ -44,6 +44,35 @@ where T: Float
         }
     }
 
+    pub fn ones(dim: Vec<usize>, requires_grad: bool) -> Tensor<T>{
+        let shape = Shape::new(dim);
+        let mut capacity = 1;
+
+        let dim = &shape.dim;
+
+        for i in dim {
+            capacity *= i;
+        }
+
+        let longarray : Vec<T> = vec![T::one(); capacity];
+        let mut gradient = None;
+
+        if requires_grad == true{
+            let gredient_t = Tensor {
+                shape: shape.clone(),
+                longarray: longarray.clone(),
+                gradient: None,
+            };
+            gradient = Some(Rc::new(RefCell::new(gredient_t)));
+        }
+
+        Tensor {
+            shape: shape,
+            longarray: longarray,
+            gradient: gradient,
+        }
+    }
+
     pub fn item(&self, index: usize) -> &T {
         println!("Accessing {:?}-side of Tensor immutably", index);
         &self.longarray[index]

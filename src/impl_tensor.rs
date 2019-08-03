@@ -3,9 +3,9 @@ use std::rc::Rc;
 use std::cell::RefCell;
 use num::Float;
 
-pub fn add<T: Float>(lhs: Rc<RefCell<Tensor<T>>>,
-    rhs: Rc<RefCell<Tensor<T>>>,
-    out: Rc<RefCell<Tensor<T>>>){
+pub fn add<T: Float>(lhs: &Rc<RefCell<Tensor<T>>>,
+    rhs: &Rc<RefCell<Tensor<T>>>,
+    out: &Rc<RefCell<Tensor<T>>>){
         let lhs = lhs.borrow();
         let rhs = rhs.borrow();
         let mut out = out.borrow_mut();
