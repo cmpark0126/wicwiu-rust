@@ -2,7 +2,7 @@ use std::fmt::{self, Display, Formatter, Debug};
 use std::ops::{Index,IndexMut};
 use std::rc::Rc;
 use std::cell::RefCell;
-use crate::numeric::Numeric;
+use num::Float;
 use crate::shape::Shape;
 
 #[derive(Debug, Clone)]
@@ -13,7 +13,7 @@ pub struct Tensor<T>{
 }
 
 impl<T> Tensor<T>
-where T: Numeric + Clone + Display + Debug
+where T: Float
 {
     pub fn zeros(dim: Vec<usize>, requires_grad: bool) -> Tensor<T>{
         let shape = Shape::new(dim);
@@ -43,39 +43,44 @@ where T: Numeric + Clone + Display + Debug
             gradient: gradient,
         }
     }
-}
 
-impl<T> Display for Tensor<T>
-where T: Numeric + Clone + Display + Debug
-{
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "({:#?}, {:#?})", self.shape, self.longarray)
+    pub fn item(&self, index: usize) -> &T {
+        println!("Accessing {:?}-side of Tensor immutably", index);
+        &self.longarray[index]
+    }
+
+    pub fn item_mut(&mut self, index: usize) -> &mut T {
+        println!("Accessing {:?}-side of Tensor immutably", index);
+        &mut self.longarray[index]
     }
 }
 
+// impl<T> Display for Tensor<T>
+// where T: Float
+// {
+//     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+//         write!(f, "({:#?}, {:#?})", self.shape, self.longarray)
+//     }
+// }
+
 // impl<T> Index<usize> for Tensor<T>
 // where
-//     T: Numeric + Clone + Display + Debug
+//     T: Float
 // {
 //     type Output = T;
 //
 //     fn index<'a>(&'a self, index: usize) -> &'a Self::Output {
 //         println!("Accessing {:?}-side of Tensor immutably", index);
-//         match index {
-//             i => &longarray
-//         }
+//         &self.longarray[index]
 //     }
 // }
 //
 // impl<T> IndexMut<usize> for Tensor<T>
 // where
-//     T: Numeric + Clone + Display + Debug
+//     T: Float
 // {
-//     fn index_mut<'a>(&'a mut self, index: Side) -> &'a mut Self::Output {
-//         println!("Accessing {:?}-side of balance mutably", index);
-//         match index {
-//             Side::Left => &mut self.left,
-//             Side::Right => &mut self.right,
-//         }
+//     fn index_mut<'a>(&'a mut self, index: usize) -> &'a mut Self::Output {
+//         println!("Accessing {:?}-side of Tensor mutably", index);
+//         &mut self.longarray[index]
 //     }
 // }

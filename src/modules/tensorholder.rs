@@ -1,4 +1,4 @@
-use crate::numeric::Numeric;
+use num::Float;
 use crate::modules::Module;
 use crate::tensor::Tensor;
 use std::rc::Rc;
@@ -11,7 +11,7 @@ pub struct Tensorholder<T>{
 }
 
 impl<T> Tensorholder<T>
-where T: Numeric + Clone + Display + Debug
+where T: Float
 {
     pub fn new(dim: Vec<usize>) -> Tensorholder<T>{
         Tensorholder{
@@ -21,7 +21,7 @@ where T: Numeric + Clone + Display + Debug
 }
 
 impl<T> Module<T> for Tensorholder<T>
-where T: Numeric + Clone + Display + Debug
+where T: Float
 {
     fn forward(&mut self){
         // panic!("forward for Tensorholder is unnecessory");

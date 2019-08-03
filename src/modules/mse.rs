@@ -1,4 +1,4 @@
-use crate::numeric::Numeric;
+use num::Float;
 use crate::modules::Module;
 use crate::tensor::Tensor;
 use std::rc::Rc;
@@ -11,7 +11,7 @@ pub struct MSE<T>{
 }
 
 impl<T> MSE<T>
-where T: Numeric + Clone + Display + Debug
+where T: Float
 {
     pub fn new(input: &Rc<RefCell<Box<dyn Module<T>>>>,) -> MSE<T>{
         // let t = ;
@@ -30,7 +30,7 @@ where T: Numeric + Clone + Display + Debug
 }
 
 impl<T> Module<T> for MSE<T>
-where T: Numeric + Clone + Display + Debug
+where T: Float
 {
     fn forward(&mut self){
         println!("forward for MSE");

@@ -1,3 +1,5 @@
+use std::cmp::Eq;
+
 #[derive(Debug, Clone)]
 pub struct Shape{
     pub rank: usize,
@@ -8,5 +10,15 @@ pub struct Shape{
 impl Shape{
     pub fn new(dim: Vec<usize>) -> Shape{
         Shape {rank: dim.len(), dim: dim}
+    }
+
+    pub fn capacity(&self) -> usize{
+        let mut capacity: usize = 1;
+
+        for i in 0..self.rank{
+            capacity *= self.dim[i];
+        }
+
+        capacity
     }
 }
