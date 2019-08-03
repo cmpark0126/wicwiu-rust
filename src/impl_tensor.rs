@@ -50,6 +50,34 @@ pub fn add<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
 
 }
 
+pub fn mul_with_constant<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
+    lhs: &Rc<RefCell<Tensor<T>>>,
+    alpha: &T,
+    out: &Rc<RefCell<Tensor<T>>>){
+        let lhs = lhs.borrow();
+        let mut out = out.borrow_mut();
+
+        if lhs.shape.rank != out.shape.rank{
+            panic!("lhs and out rank must be same, \
+                    but receive lhs shape rank {}, out shape rank {}.",
+                    lhs.shape.rank,
+                    out.shape.rank)
+        }
+
+        let capacity = lhs.shape.capacity();
+
+        if capacity!= out.shape.capacity(){
+            panic!("lhs and out capacity must be same, \
+                    but receive lhs shape capacity {}, out shape capacity {}.",
+                    capacity,
+                    out.shape.capacity())
+        }
+
+        for i in 0..capacity{
+            out.longarray[i] = (*alpha * lhs.longarray[i]);
+        }
+}
+
 pub fn matmul<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
     lhs: &Rc<RefCell<Tensor<T>>>,
     rhs: &Rc<RefCell<Tensor<T>>>,
@@ -154,7 +182,7 @@ pub fn square<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
             out_t.longarray[i] = in_t.longarray[i] * in_t.longarray[i];
         }
 
-    }
+}
 
 pub fn sum<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
     in_t: &Rc<RefCell<Tensor<T>>>,
@@ -174,4 +202,4 @@ pub fn sum<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
         for i in 0..capacity{
             out_t.longarray[0] = out_t.longarray[0] + in_t.longarray[i];
         }
-    }
+}

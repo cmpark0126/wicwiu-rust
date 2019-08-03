@@ -1,6 +1,6 @@
 use num::{Num, NumCast, Float, FromPrimitive};
 use crate::modules::Module;
-use crate::impl_tensor::{add, square, sum};
+use crate::impl_tensor::{add, square, sum, mul_with_constant};
 use crate::tensor::Tensor;
 use std::rc::Rc;
 use std::cell::RefCell;
@@ -68,13 +68,16 @@ where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
 
     fn backward(&mut self){
         println!("backward for MSE");
-        let result = &self.result.borrow();
-        let result_grad = result.gradient.as_ref().unwrap();
+        let result = &self.result;
+        let result_t = result.borrow();
+        let result_grad = result_t.gradient.as_ref().unwrap();
+        let input = &((&self.inputs[0]).borrow()).result();
+        let input_t = input.borrow();
+        let input_grad = input_t.gradient.as_ref().unwrap();
         // subtract value can be use as a result of diffrenciation.
         let subtract = &self.subtract;
 
-
-
+        mul_with_constant(subtract, &result_grad.borrow().longarray[0], input_grad);
     }
 
     fn result(&self) -> Rc<RefCell<Tensor<T>>> {
