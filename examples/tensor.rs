@@ -13,8 +13,16 @@ fn main() {
     let out = Rc::new(RefCell::new(out));
 
     println!("{:?}", out.borrow());
-
     add(&t, &t_clone, &out);
+    println!("{:?}", out.borrow());
 
+    drop(t);
+    drop(t_clone);
+
+    let t = out;
+    let out = Rc::new(RefCell::new(t.borrow().clone()));
+
+    println!("{:?}", out.borrow());
+    sigmoid(&t, &out);
     println!("{:?}", out.borrow());
 }
