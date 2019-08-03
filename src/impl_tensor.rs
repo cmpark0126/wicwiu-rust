@@ -4,7 +4,9 @@ use std::cell::RefCell;
 use num::{Num, Float};
 
 pub fn add<T: Num + Float + Clone>(lhs: &Rc<RefCell<Tensor<T>>>,
+    alpha: &T,
     rhs: &Rc<RefCell<Tensor<T>>>,
+    beta: &T,
     out: &Rc<RefCell<Tensor<T>>>){
         let lhs = lhs.borrow();
         let rhs = rhs.borrow();
@@ -41,50 +43,7 @@ pub fn add<T: Num + Float + Clone>(lhs: &Rc<RefCell<Tensor<T>>>,
         }
 
         for i in 0..capacity{
-            out.longarray[i] = lhs.longarray[i] + rhs.longarray[i];
-        }
-
-}
-
-pub fn sub<T: Num + Float + Clone>(lhs: &Rc<RefCell<Tensor<T>>>,
-    rhs: &Rc<RefCell<Tensor<T>>>,
-    out: &Rc<RefCell<Tensor<T>>>){
-        let lhs = lhs.borrow();
-        let rhs = rhs.borrow();
-        let mut out = out.borrow_mut();
-
-        if lhs.shape.rank != rhs.shape.rank{
-            panic!("lhs and rhs rank must be same, \
-                    but receive lhs shape rank {}, rhs shape rank {}.",
-                    lhs.shape.rank,
-                    rhs.shape.rank)
-        }
-
-        if lhs.shape.rank != out.shape.rank{
-            panic!("lhs and out rank must be same, \
-                    but receive lhs shape rank {}, out shape rank {}.",
-                    lhs.shape.rank,
-                    out.shape.rank)
-        }
-
-        let capacity = lhs.shape.capacity();
-
-        if capacity != rhs.shape.capacity(){
-            panic!("lhs and rhs capacity must be same, \
-                    but receive lhs shape capacity {}, rhs shape capacity {}.",
-                    capacity,
-                    rhs.shape.capacity())
-        }
-
-        if capacity!= out.shape.capacity(){
-            panic!("lhs and out capacity must be same, \
-                    but receive lhs shape capacity {}, out shape capacity {}.",
-                    capacity,
-                    out.shape.capacity())
-        }
-
-        for i in 0..capacity{
-            out.longarray[i] = lhs.longarray[i] - rhs.longarray[i];
+            out.longarray[i] = (*alpha * lhs.longarray[i]) + (*beta * rhs.longarray[i]);
         }
 
 }

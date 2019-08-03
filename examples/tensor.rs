@@ -13,7 +13,7 @@ fn main() {
     let out = Rc::new(RefCell::new(out));
 
     println!("{:?}", out.borrow());
-    add(&t, &t_clone, &out);
+    add(&t, &2.0, &t_clone, &3.0, &out);
     println!("{:?}", out.borrow());
 
     drop(t);
