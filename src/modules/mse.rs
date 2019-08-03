@@ -1,6 +1,6 @@
 use num::{Num, NumCast, Float, FromPrimitive};
 use crate::modules::Module;
-use crate::impl_tensor::{add, sum};
+use crate::impl_tensor::{add, square, sum};
 use crate::tensor::Tensor;
 use std::rc::Rc;
 use std::cell::RefCell;
@@ -8,6 +8,8 @@ use std::fmt::Debug;
 
 pub struct MSE<T>{
     inputs: Vec<Rc<RefCell<Box<dyn Module<T>>>>>,
+    subtract: Rc<RefCell<Tensor<T>>>,
+    squred: Rc<RefCell<Tensor<T>>>,
     result: Rc<RefCell<Tensor<T>>>,
 }
 
@@ -15,20 +17,29 @@ impl<T> MSE<T>
 where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
 {
     pub fn new(input: &Rc<RefCell<Box<dyn Module<T>>>>, target: &Rc<RefCell<Box<dyn Module<T>>>>) -> MSE<T>{
-        // let t = ;
+        let input_result = input.borrow().result();
+        let input_result_t = input_result.borrow();
+        let target_result = target.borrow().result();
+        let target_result_t = target_result.borrow();
 
-        if input.borrow().result().borrow().shape.rank > 1 {
+        if input_result_t.shape.rank > 1 {
             panic!("Rank of input result tensor is less than 2, but got {}.", input.borrow().result().borrow().shape.rank);
         }
 
-        if target.borrow().result().borrow().shape.rank > 1 {
+        if target_result_t.shape.rank > 1 {
             panic!("Rank of target result tensor is less than 2, but got {}.", target.borrow().result().borrow().shape.rank);
         }
+
+        let subtract = input_result_t.clone();
+
+        let squred = input_result_t.clone();
 
         let result = Tensor::zeros(vec![], true);
 
         MSE{
             inputs: vec![Rc::clone(input), Rc::clone(target)],
+            subtract: Rc::new(RefCell::new(subtract)),
+            squred: Rc::new(RefCell::new(squred)),
             result: Rc::new(RefCell::new(result)),
         }
     }
@@ -42,14 +53,16 @@ where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
 
         let input = &((&self.inputs[0]).borrow()).result();
         let target = &((&self.inputs[1]).borrow()).result();
-        let middle_result = &Rc::new(RefCell::new(input.borrow().clone()));
+        let subtract = &self.subtract;
+        let squred = &self.squred;
         let result = &self.result;
 
         let alpha : &T = &T::from_f32(1.0).unwrap();
         let beta : &T = &T::from_f32(-1.0).unwrap();
 
-        add(input, alpha, target, beta, middle_result);
-        sum(middle_result, result);
+        add(input, alpha, target, beta, subtract);
+        square(subtract, squred);
+        sum(squred, result); // in this time, I did not use * 0.5. I will fix this algo.
 
     }
 
@@ -57,7 +70,10 @@ where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
         println!("backward for MSE");
         let result = &self.result.borrow();
         let result_grad = result.gradient.as_ref().unwrap();
-        // println!("{:?}", result_grad.borrow());
+        // subtract value can be use as a result of diffrenciation.
+        let subtract = &self.subtract;
+
+
 
     }
 

@@ -128,6 +128,34 @@ pub fn sigmoid<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
 
     }
 
+pub fn square<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
+    in_t: &Rc<RefCell<Tensor<T>>>,
+    out_t: &Rc<RefCell<Tensor<T>>>){
+        let in_t = in_t.borrow();
+        let mut out_t = out_t.borrow_mut();
+
+        if in_t.shape.rank != out_t.shape.rank{
+            panic!("in_t and out_t rank must be same, \
+                    but receive in_t shape rank {}, out_t shape rank {}.",
+                    in_t.shape.rank,
+                    out_t.shape.rank)
+        }
+
+        let capacity = in_t.shape.capacity();
+
+        if capacity!= out_t.shape.capacity(){
+            panic!("in_t and out_t capacity must be same, \
+                    but receive in_t shape capacity {}, out_t shape capacity {}.",
+                    capacity,
+                    out_t.shape.capacity())
+        }
+
+        for i in 0..capacity{
+            out_t.longarray[i] = in_t.longarray[i] * in_t.longarray[i];
+        }
+
+    }
+
 pub fn sum<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
     in_t: &Rc<RefCell<Tensor<T>>>,
     out_t: &Rc<RefCell<Tensor<T>>>){
@@ -143,7 +171,6 @@ pub fn sum<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
         let capacity = in_t.shape.capacity();
 
         out_t.longarray[0] = T::zero();
-
         for i in 0..capacity{
             out_t.longarray[0] = out_t.longarray[0] + in_t.longarray[i];
         }
