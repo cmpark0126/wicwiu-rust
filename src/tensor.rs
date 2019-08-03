@@ -31,7 +31,7 @@ where T: Num + NumCast + Float + Clone + FromPrimitive
         if requires_grad == true{
             let gredient_t = Tensor {
                 shape: shape.clone(),
-                longarray: longarray.clone(),
+                longarray: vec![T::zero(); capacity],
                 gradient: None,
             };
             gradient = Some(Rc::new(RefCell::new(gredient_t)));
@@ -60,7 +60,7 @@ where T: Num + NumCast + Float + Clone + FromPrimitive
         if requires_grad == true{
             let gredient_t = Tensor {
                 shape: shape.clone(),
-                longarray: longarray.clone(),
+                longarray: vec![T::zero(); capacity],
                 gradient: None,
             };
             gradient = Some(Rc::new(RefCell::new(gredient_t)));

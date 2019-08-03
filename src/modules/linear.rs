@@ -44,10 +44,11 @@ where
         let input = &((&self.inputs[0]).borrow()).result();
         let weight = &self.weight;
         let bias = &self.bias;
+        let middle_result = &Rc::new(RefCell::new(bias.borrow().clone()));
         let result = &self.result;
 
-        matmul(weight, input, result);
-        add(result, &T::one(), bias, &T::one(), result);
+        matmul(weight, input, middle_result);
+        add(middle_result, &T::one(), bias, &T::one(), result);
     }
 
     fn backward(&mut self) {

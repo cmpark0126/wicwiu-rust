@@ -1,6 +1,6 @@
 use num::{Num, NumCast, Float, FromPrimitive};
 use crate::modules::Module;
-use crate::impl_tensor::{matmul, add};
+use crate::impl_tensor::{add, sum};
 use crate::tensor::Tensor;
 use std::rc::Rc;
 use std::cell::RefCell;
@@ -39,6 +39,17 @@ where T: Num + NumCast + Float + Clone + FromPrimitive
 {
     fn forward(&mut self){
         println!("forward for MSE");
+
+        let input = &((&self.inputs[0]).borrow()).result();
+        let target = &((&self.inputs[1]).borrow()).result();
+        let middle_result = &Rc::new(RefCell::new(input.borrow().clone()));
+        let result = &self.result;
+
+        let alpha : &T = &T::from_f32(1.0).unwrap();
+        let beta : &T = &T::from_f32(-1.0).unwrap();
+
+        add(input, alpha, target, beta, middle_result);
+        sum(middle_result, result);
 
     }
 

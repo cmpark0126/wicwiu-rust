@@ -3,7 +3,8 @@ use std::rc::Rc;
 use std::cell::RefCell;
 use num::{Num, NumCast, Float, FromPrimitive};
 
-pub fn add<T: Num + NumCast + Float + Clone + FromPrimitive>(lhs: &Rc<RefCell<Tensor<T>>>,
+pub fn add<T: Num + NumCast + Float + Clone + FromPrimitive>(
+    lhs: &Rc<RefCell<Tensor<T>>>,
     alpha: &T,
     rhs: &Rc<RefCell<Tensor<T>>>,
     beta: &T,
@@ -48,7 +49,8 @@ pub fn add<T: Num + NumCast + Float + Clone + FromPrimitive>(lhs: &Rc<RefCell<Te
 
 }
 
-pub fn matmul<T: Num + NumCast + Float + Clone + FromPrimitive>(lhs: &Rc<RefCell<Tensor<T>>>,
+pub fn matmul<T: Num + NumCast + Float + Clone + FromPrimitive>(
+    lhs: &Rc<RefCell<Tensor<T>>>,
     rhs: &Rc<RefCell<Tensor<T>>>,
     out: &Rc<RefCell<Tensor<T>>>){
         let lhs = lhs.borrow();
@@ -96,7 +98,8 @@ pub fn matmul<T: Num + NumCast + Float + Clone + FromPrimitive>(lhs: &Rc<RefCell
 
 }
 
-pub fn sigmoid<T: Num + NumCast + Float + Clone + FromPrimitive>(in_t: &Rc<RefCell<Tensor<T>>>,
+pub fn sigmoid<T: Num + NumCast + Float + Clone + FromPrimitive>(
+    in_t: &Rc<RefCell<Tensor<T>>>,
     out_t: &Rc<RefCell<Tensor<T>>>){
         let in_t = in_t.borrow();
         let mut out_t = out_t.borrow_mut();
@@ -122,4 +125,25 @@ pub fn sigmoid<T: Num + NumCast + Float + Clone + FromPrimitive>(in_t: &Rc<RefCe
             out_t.longarray[i] = divider.recip();
         }
 
+    }
+
+pub fn sum<T: Num + NumCast + Float + Clone + FromPrimitive>(
+    in_t: &Rc<RefCell<Tensor<T>>>,
+    out_t: &Rc<RefCell<Tensor<T>>>){
+        let in_t = in_t.borrow();
+        let mut out_t = out_t.borrow_mut();
+
+        if out_t.shape.rank > 0{
+            panic!("out_t rank must be 0, \
+                    but receive out_t shape rank {}.",
+                    out_t.shape.rank)
+        }
+
+        let capacity = in_t.shape.capacity();
+
+        out_t.longarray[0] = T::zero();
+
+        for i in 0..capacity{
+            out_t.longarray[0] = out_t.longarray[0] + in_t.longarray[i];
+        }
     }
