@@ -20,9 +20,9 @@ where
     T: Numeric + Clone + Display + Debug + Sized,
 {
     pub fn new(input: &Rc<RefCell<Box<dyn Module<T>>>>, in_features: usize, out_features: usize) -> Linear<T> {
-        let weight = Tensor::<T>::zeros(vec![out_features, in_features]);
-        let bias = Tensor::<T>::zeros(vec![out_features]);
-        let result = Tensor::<T>::zeros(vec![out_features]);
+        let weight = Tensor::<T>::zeros(vec![out_features, in_features], true);
+        let bias = Tensor::<T>::zeros(vec![out_features], true);
+        let result = Tensor::<T>::zeros(vec![out_features], true);
         Linear {
             inputs: vec![Rc::clone(input)],
             result: Rc::new(RefCell::new(result)),

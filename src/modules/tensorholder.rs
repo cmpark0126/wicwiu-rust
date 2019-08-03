@@ -15,7 +15,7 @@ where T: Numeric + Clone + Display + Debug
 {
     pub fn new(dim: Vec<usize>) -> Tensorholder<T>{
         Tensorholder{
-            tensor: Rc::new(RefCell::new(Tensor::<T>::zeros(dim))),
+            tensor: Rc::new(RefCell::new(Tensor::<T>::zeros(dim, true))),
         }
     }
 }
