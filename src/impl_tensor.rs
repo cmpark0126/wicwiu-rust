@@ -128,6 +128,100 @@ pub fn matmul<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
 
 }
 
+pub fn matmul_backward_input<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
+    weight: &Rc<RefCell<Tensor<T>>>,
+    delta: &Rc<RefCell<Tensor<T>>>,
+    grad: &Rc<RefCell<Tensor<T>>>){
+        let weight = weight.borrow();
+        let delta = delta.borrow();
+        let mut grad = grad.borrow_mut();
+
+        if weight.shape.rank != 2{
+            panic!("weight rank must be 2, \
+                    but receive weight shape rank {}.",
+                    weight.shape.rank)
+        }
+
+        if delta.shape.rank != 1 || grad.shape.rank != 1{
+            panic!("delta and grad rank must be 1, \
+                    but receive delta shape rank {}, grad shape rank {}.",
+                    delta.shape.rank,
+                    grad.shape.rank)
+        }
+
+        if weight.shape.dim[0] != delta.shape.dim[0]{
+            panic!("weight's dim[1] and delta's dim[0] must be same, \
+                    but receive weight's dim[1] {}, delta's dim[0] {}.",
+                    weight.shape.dim[0],
+                    delta.shape.dim[0])
+        }
+
+        if weight.shape.dim[1] != grad.shape.dim[0]{
+            panic!("weight's dim[0] and out's dim[0] must be same, \
+                    but receive weight's dim[0] {}, grad's dim[0] {}.",
+                    weight.shape.dim[1],
+                    grad.shape.dim[0])
+        }
+
+        let in_features = grad.shape.dim[0].clone();
+        let out_features = delta.shape.dim[0].clone();
+
+        for in_idx in 0..in_features{
+            grad.longarray[in_idx] = T::zero();
+            for out_idx in 0..out_features{
+                grad.longarray[in_idx] = grad.longarray[in_idx] +
+                                            (weight.longarray[out_idx * in_features + in_idx] *
+                                                delta.longarray[out_idx]);
+            }
+        }
+}
+
+pub fn matmul_backward_weight<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
+    delta: &Rc<RefCell<Tensor<T>>>,
+    input: &Rc<RefCell<Tensor<T>>>,
+    grad: &Rc<RefCell<Tensor<T>>>){
+        let delta = delta.borrow();
+        let input = input.borrow();
+        let mut grad = grad.borrow_mut();
+
+        if grad.shape.rank != 2{
+            panic!("grad rank must be 2, \
+                    but receive grad shape rank {}.",
+                    grad.shape.rank)
+        }
+
+        if delta.shape.rank != 1 || input.shape.rank != 1{
+            panic!("delta and input rank must be 1, \
+                    but receive delta shape rank {}, input shape rank {}.",
+                    delta.shape.rank,
+                    input.shape.rank)
+        }
+
+        if grad.shape.dim[1] != input.shape.dim[0]{
+            panic!("grad's dim[1] and input's dim[0] must be same, \
+                    but receive grad's dim[1] {}, input's dim[0] {}.",
+                    grad.shape.dim[1],
+                    input.shape.dim[0])
+        }
+
+        if grad.shape.dim[0] != delta.shape.dim[0]{
+            panic!("grad's dim[0] and delta's dim[0] must be same, \
+                    but receive grad's dim[0] {}, delta's dim[0] {}.",
+                    grad.shape.dim[0],
+                    delta.shape.dim[0])
+        }
+
+        let in_features = input.shape.dim[0].clone();
+        let out_features = delta.shape.dim[0].clone();
+
+        for out_idx in 0..out_features{
+            for in_idx in 0..in_features{
+                grad.longarray[out_idx * in_features + in_idx] =
+                    delta.longarray[out_idx] * input.longarray[in_idx];
+            }
+        }
+}
+
 pub fn sigmoid<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
     in_t: &Rc<RefCell<Tensor<T>>>,
     out_t: &Rc<RefCell<Tensor<T>>>){

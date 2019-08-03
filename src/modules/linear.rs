@@ -1,5 +1,5 @@
 use crate::modules::Module;
-use crate::impl_tensor::{matmul, add, mul_with_constant};
+use crate::impl_tensor::{matmul, add, mul_with_constant, matmul_backward_input, matmul_backward_weight};
 use num::{Num, NumCast, Float, FromPrimitive};
 use crate::tensor::Tensor;
 use std::rc::Rc;
@@ -74,6 +74,11 @@ where
 
         mul_with_constant(result_grad, &T::one(), bias_grad);
         mul_with_constant(result_grad, &T::one(), middle_result_grad);
+        // if input is tensorholder, we don't need to run backward algorithm on this case
+        if !((&self.inputs[0]).borrow()).is_tensorholder(){
+            matmul_backward_input(weight, middle_result_grad, input_grad);
+        }
+        matmul_backward_weight(middle_result_grad, input, weight_grad);
     }
 
     fn result(&self) -> Rc<RefCell<Tensor<T>>> {
