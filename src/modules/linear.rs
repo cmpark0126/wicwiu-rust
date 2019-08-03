@@ -1,5 +1,6 @@
 use crate::modules::Module;
-use crate::impl_tensor::{matmul, add, mul_with_constant, matmul_backward_input, matmul_backward_weight};
+use crate::impl_tensor::{matmul, add, mul_with_constant,
+                        matmul_backward_input, matmul_backward_weight};
 use num::{Num, NumCast, Float, FromPrimitive};
 use crate::tensor::Tensor;
 use std::rc::Rc;
@@ -21,7 +22,9 @@ impl<T> Linear<T>
 where
     T: Num + NumCast + Float + Clone + FromPrimitive + Debug,
 {
-    pub fn new(input: &Rc<RefCell<Box<dyn Module<T>>>>, in_features: usize, out_features: usize) -> Linear<T> {
+    pub fn new(input: &Rc<RefCell<Box<dyn Module<T>>>>,
+                in_features: usize,
+                out_features: usize) -> Linear<T> {
         let weight = Tensor::<T>::ones(vec![out_features, in_features], true);
         let middle_result = Tensor::<T>::zeros(vec![out_features], true);
         let bias = Tensor::<T>::zeros(vec![out_features], true);

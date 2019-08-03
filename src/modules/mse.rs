@@ -16,18 +16,21 @@ pub struct MSE<T>{
 impl<T> MSE<T>
 where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
 {
-    pub fn new(input: &Rc<RefCell<Box<dyn Module<T>>>>, target: &Rc<RefCell<Box<dyn Module<T>>>>) -> MSE<T>{
+    pub fn new(input: &Rc<RefCell<Box<dyn Module<T>>>>,
+                target: &Rc<RefCell<Box<dyn Module<T>>>>) -> MSE<T>{
         let input_result = &input.borrow().result();
         let input_result_t = &input_result.borrow();
         let target_result = &target.borrow().result();
         let target_result_t = &target_result.borrow();
 
         if input_result_t.shape.rank > 1 {
-            panic!("Rank of input result tensor is less than 2, but got {}.", input.borrow().result().borrow().shape.rank);
+            panic!("Rank of input result tensor is less than 2, but got {}.",
+                    input.borrow().result().borrow().shape.rank);
         }
 
         if target_result_t.shape.rank > 1 {
-            panic!("Rank of target result tensor is less than 2, but got {}.", target.borrow().result().borrow().shape.rank);
+            panic!("Rank of target result tensor is less than 2, but got {}.",
+                    target.borrow().result().borrow().shape.rank);
         }
 
         let subtract = Tensor::zeros_like(Rc::clone(input_result));
