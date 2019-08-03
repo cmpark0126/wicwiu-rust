@@ -45,7 +45,8 @@ pub fn add<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
         }
 
         for i in 0..capacity{
-            out.longarray[i] = (*alpha * lhs.longarray[i]) + (*beta * rhs.longarray[i]);
+            out.longarray[i] = (*alpha * lhs.longarray[i]) +
+                                (*beta * rhs.longarray[i]);
         }
 
 }
@@ -74,7 +75,7 @@ pub fn mul_with_constant<T: Num + NumCast + Float + Clone + FromPrimitive + Debu
         }
 
         for i in 0..capacity{
-            out.longarray[i] = (*alpha * lhs.longarray[i]);
+            out.longarray[i] = *alpha * lhs.longarray[i];
         }
 }
 
@@ -120,8 +121,8 @@ pub fn matmul<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
             out.longarray[out_idx] = T::zero();
             for in_idx in 0..in_features{
                 out.longarray[out_idx] = out.longarray[out_idx] +
-                        (lhs.longarray[out_idx * in_features + in_idx] *
-                            rhs.longarray[in_idx]);
+                                            (lhs.longarray[out_idx * in_features + in_idx] *
+                                                rhs.longarray[in_idx]);
             }
         }
 
@@ -154,7 +155,52 @@ pub fn sigmoid<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
             out_t.longarray[i] = divider.recip();
         }
 
-    }
+}
+
+pub fn sigmoid_backward<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
+    out_t: &Rc<RefCell<Tensor<T>>>,
+    delta_t: &Rc<RefCell<Tensor<T>>>,
+    grad_t: &Rc<RefCell<Tensor<T>>>){
+        let out_t = out_t.borrow();
+        let delta_t = delta_t.borrow();
+        let mut grad_t = grad_t.borrow_mut();
+
+        if out_t.shape.rank != delta_t.shape.rank{
+            panic!("out_t and delta_t rank must be same, \
+                    but receive out_t shape rank {}, delta_t shape rank {}.",
+                    out_t.shape.rank,
+                    delta_t.shape.rank)
+        }
+
+        if out_t.shape.rank != grad_t.shape.rank{
+            panic!("out_t and grad_t rank must be same, \
+                    but receive out_t shape rank {}, grad_t shape rank {}.",
+                    out_t.shape.rank,
+                    grad_t.shape.rank)
+        }
+
+        let capacity = out_t.shape.capacity();
+
+        if capacity!= delta_t.shape.capacity(){
+            panic!("out_t and delta_t capacity must be same, \
+                    but receive out_t shape capacity {}, delta_t shape capacity {}.",
+                    capacity,
+                    delta_t.shape.capacity())
+        }
+
+        if capacity!= grad_t.shape.capacity(){
+            panic!("out_t and grad_t capacity must be same, \
+                    but receive out_t shape capacity {}, grad_t shape capacity {}.",
+                    capacity,
+                    grad_t.shape.capacity())
+        }
+
+        for i in 0..capacity{
+            grad_t.longarray[i] = out_t.longarray[i] *
+                                    (T::one() - out_t.longarray[i]) *
+                                    delta_t.longarray[i];
+        }
+}
 
 pub fn square<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
     in_t: &Rc<RefCell<Tensor<T>>>,

@@ -1,6 +1,6 @@
 use num::{Num, NumCast, Float, FromPrimitive};
 use crate::modules::Module;
-use crate::impl_tensor::sigmoid;
+use crate::impl_tensor::{sigmoid, sigmoid_backward};
 use crate::tensor::Tensor;
 use std::rc::Rc;
 use std::cell::RefCell;
@@ -15,7 +15,7 @@ impl<T> Sigmoid<T>
 where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
 {
     pub fn new(input: &Rc<RefCell<Box<dyn Module<T>>>>,) -> Sigmoid<T>{
-        let result = input.borrow().result().borrow().clone();
+        let result = Tensor::zeros_like(input.borrow().result());
 
         Sigmoid{
             inputs: vec![Rc::clone(input)],
@@ -37,6 +37,14 @@ where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
 
     fn backward(&mut self){
         println!("backward for Sigmoid");
+        let result = &self.result;
+        let result_t = &result.borrow();
+        let result_grad = result_t.gradient.as_ref().unwrap();
+        let input = &((&self.inputs[0]).borrow()).result();
+        let input_t = &input.borrow();
+        let input_grad = input_t.gradient.as_ref().unwrap();
+
+        sigmoid_backward(result, result_grad, input_grad);
     }
 
     fn result(&self) -> Rc<RefCell<Tensor<T>>> {
