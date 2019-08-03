@@ -50,6 +50,10 @@ where
         Rc::clone(&self.result)
     }
 
+    fn parameters(&self) -> Vec<Rc<RefCell<Tensor<T>>>>{
+        vec![Rc::clone(&self.weight), Rc::clone(&self.bias),]
+    }
+
     // fn result_mut(&mut self) -> &mut Rc<RefCell<Tensor<T>>> {
     //     &mut self.result.borrow_mut()
     // }

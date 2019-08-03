@@ -45,4 +45,16 @@ where
     fn result(&self) -> Rc<RefCell<Tensor<T>>> {
         Rc::clone(&self.module_list[self.module_list.len() - 1].borrow().result())
     }
+
+    fn parameters(&self) -> Vec<Rc<RefCell<Tensor<T>>>>{
+        let mut v = Vec::<Rc<RefCell<Tensor<T>>>>::new();
+
+        for module in &self.module_list{
+            for p in module.borrow().parameters(){
+                v.push(p);
+            }
+        }
+
+        v
+    }
 }

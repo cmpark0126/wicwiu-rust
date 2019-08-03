@@ -9,13 +9,13 @@ pub trait Module<T> {
     fn result(&self) -> Rc<RefCell<Tensor<T>>>;
     // fn result_mut(&mut self) -> &mut Rc<RefCell<Tensor<T>>>;
 
-    fn parameters(&self) -> Vec<&Tensor<T>>{
+    fn parameters(&self) -> Vec<Rc<RefCell<Tensor<T>>>>{
         vec![]
     }
 
-    fn parameters_mut(&mut self) -> Vec<&mut Tensor<T>>{
-        vec![]
-    }
+    // fn parameters_mut(&mut self) -> Vec<&mut Tensor<T>>{
+    //     vec![]
+    // }
 
     fn is_tensorholder(&self) -> bool{
         false
