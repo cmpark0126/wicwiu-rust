@@ -12,7 +12,6 @@ pub struct Tensor<T>{
 impl<T> Tensor<T>
 where T: Numeric + Clone + Display + Debug
 {
-    #[inline]
     pub fn zeros(dim: Vec<usize>) -> Tensor<T>{
         let shape = Shape::new(dim);
         let mut capacity = 1;
