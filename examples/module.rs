@@ -3,7 +3,7 @@ use wicwiu::optimizers::*;
 use wicwiu::modules::*;
 
 fn main() {
-    let mut x = Tensorholder::<f32>::new(vec![4]);
+    let x = Tensorholder::<f32>::new(vec![4]);
     let mut nn = NeuralNetwork::<f32>::new();
 
     let x_ref = nn.push(Box::new(x));
@@ -13,7 +13,7 @@ fn main() {
     let act2 = nn.push(Box::new(Sigmoid::<f32>::new(&linear2)));
     let mse = nn.push(Box::new(MSE::<f32>::new(&act2)));
 
-    let mut optim: &mut Optimizer<f32> = &mut SGD::new(nn.parameters(), 0.01);
+    let optim: &mut Optimizer<f32> = &mut SGD::new(nn.parameters(), 0.01);
 
     println!("{:?}, \n{}", mse.borrow().result().borrow(), mse.borrow().is_tensorholder());
 
