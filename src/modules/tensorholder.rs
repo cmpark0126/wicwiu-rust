@@ -35,7 +35,7 @@ where T: Numeric + Clone + Display + Debug
         Rc::clone(&self.tensor)
     }
 
-    // fn is_tensorholder(&self) -> bool{
-    //     true
-    // }
+    fn is_tensorholder(&self) -> bool{
+        true
+    }
 }

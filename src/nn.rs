@@ -30,7 +30,10 @@ where
 {
     fn forward(&mut self){
         for module in &self.module_list{
-            module.borrow_mut().forward();
+            let mut module_mut = module.borrow_mut();
+            if module_mut.is_tensorholder() == false {
+                module_mut.forward();
+            }
         }
     }
 
@@ -38,7 +41,10 @@ where
         let len = self.module_list.len();
 
         for idx in (0..len).rev(){
-            &self.module_list[idx].borrow_mut().backward();
+            let mut module_mut = self.module_list[idx].borrow_mut();
+            if module_mut.is_tensorholder() == false {
+                module_mut.backward();
+            }
         }
     }
 
