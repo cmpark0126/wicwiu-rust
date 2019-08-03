@@ -25,4 +25,19 @@ fn main() {
     println!("{:?}", out.borrow());
     sigmoid(&t, &out);
     println!("{:?}", out.borrow());
+
+    drop(t);
+    drop(out);
+
+    let lhs : Tensor<f32> = Tensor::ones(vec![3, 4], false);
+    let rhs : Tensor<f32> = Tensor::ones(vec![4], false);
+    let out : Tensor<f32> = Tensor::ones(vec![3], false);
+
+    let lhs = Rc::new(RefCell::new(lhs));
+    let rhs = Rc::new(RefCell::new(rhs));
+    let out = Rc::new(RefCell::new(out));
+
+    println!("{:?}", out.borrow());
+    matmul(&lhs, &rhs, &out);
+    println!("{:?}", out.borrow());
 }
