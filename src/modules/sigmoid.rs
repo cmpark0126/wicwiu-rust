@@ -1,5 +1,6 @@
-use num::{Num, Float};
+use num::{Num, NumCast, Float, FromPrimitive};
 use crate::modules::Module;
+use crate::impl_tensor::sigmoid;
 use crate::tensor::Tensor;
 use std::rc::Rc;
 use std::cell::RefCell;
@@ -11,7 +12,7 @@ pub struct Sigmoid<T>{
 }
 
 impl<T> Sigmoid<T>
-where T: Num + Float + Clone
+where T: Num + NumCast + Float + Clone + FromPrimitive
 {
     pub fn new(input: &Rc<RefCell<Box<dyn Module<T>>>>,) -> Sigmoid<T>{
         let result = input.borrow().result().borrow().clone();
@@ -24,10 +25,14 @@ where T: Num + Float + Clone
 }
 
 impl<T> Module<T> for Sigmoid<T>
-where T: Num + Float + Clone
+where T: Num + NumCast + Float + Clone + FromPrimitive
 {
     fn forward(&mut self){
         println!("forward for Sigmoid");
+        let input = &((&self.inputs[0]).borrow()).result();
+        let result = &self.result;
+
+        sigmoid(input, result);
     }
 
     fn backward(&mut self){

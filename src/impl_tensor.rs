@@ -1,9 +1,9 @@
 use crate::tensor::Tensor;
 use std::rc::Rc;
 use std::cell::RefCell;
-use num::{Num, Float};
+use num::{Num, NumCast, Float, FromPrimitive};
 
-pub fn add<T: Num + Float + Clone>(lhs: &Rc<RefCell<Tensor<T>>>,
+pub fn add<T: Num + NumCast + Float + Clone + FromPrimitive>(lhs: &Rc<RefCell<Tensor<T>>>,
     alpha: &T,
     rhs: &Rc<RefCell<Tensor<T>>>,
     beta: &T,
@@ -48,7 +48,7 @@ pub fn add<T: Num + Float + Clone>(lhs: &Rc<RefCell<Tensor<T>>>,
 
 }
 
-pub fn matmul<T: Num + Float + Clone>(lhs: &Rc<RefCell<Tensor<T>>>,
+pub fn matmul<T: Num + NumCast + Float + Clone + FromPrimitive>(lhs: &Rc<RefCell<Tensor<T>>>,
     rhs: &Rc<RefCell<Tensor<T>>>,
     out: &Rc<RefCell<Tensor<T>>>){
         let lhs = lhs.borrow();
@@ -96,7 +96,7 @@ pub fn matmul<T: Num + Float + Clone>(lhs: &Rc<RefCell<Tensor<T>>>,
 
 }
 
-pub fn sigmoid<T: Num + Float + Clone>(in_t: &Rc<RefCell<Tensor<T>>>,
+pub fn sigmoid<T: Num + NumCast + Float + Clone + FromPrimitive>(in_t: &Rc<RefCell<Tensor<T>>>,
     out_t: &Rc<RefCell<Tensor<T>>>){
         let in_t = in_t.borrow();
         let mut out_t = out_t.borrow_mut();

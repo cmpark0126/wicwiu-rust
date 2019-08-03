@@ -1,5 +1,6 @@
 use crate::modules::Module;
-use num::{Num, Float};
+use crate::impl_tensor::{matmul, add};
+use num::{Num, NumCast, Float, FromPrimitive};
 use crate::tensor::Tensor;
 use std::rc::Rc;
 use std::cell::RefCell;
@@ -17,10 +18,10 @@ pub struct Linear<T> {
 
 impl<T> Linear<T>
 where
-    T: Num + Float + Clone + Sized,
+    T: Num + NumCast + Float + Clone + FromPrimitive,
 {
     pub fn new(input: &Rc<RefCell<Box<dyn Module<T>>>>, in_features: usize, out_features: usize) -> Linear<T> {
-        let weight = Tensor::<T>::zeros(vec![out_features, in_features], true);
+        let weight = Tensor::<T>::ones(vec![out_features, in_features], true);
         let bias = Tensor::<T>::zeros(vec![out_features], true);
         let result = Tensor::<T>::zeros(vec![out_features], true);
         Linear {
@@ -36,10 +37,17 @@ where
 
 impl<T> Module<T> for Linear<T>
 where
-    T: Num + Float + Clone,
+    T: Num + NumCast + Float + Clone + FromPrimitive,
 {
     fn forward(&mut self) {
         println!("forward for Linear");
+        let input = &((&self.inputs[0]).borrow()).result();
+        let weight = &self.weight;
+        let bias = &self.bias;
+        let result = &self.result;
+
+        matmul(weight, input, result);
+        add(result, &T::one(), bias, &T::one(), result);
     }
 
     fn backward(&mut self) {
