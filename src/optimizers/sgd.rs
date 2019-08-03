@@ -1,5 +1,5 @@
 use crate::optimizers::Optimizer;
-use num::Float;
+use num::{Num, Float};
 use crate::tensor::Tensor;
 use std::rc::Rc;
 use std::cell::RefCell;
@@ -12,7 +12,7 @@ pub struct SGD<T> {
 
 impl<T> SGD<T>
 where
-    T: Float,
+    T: Num + Float + Clone,
 {
     pub fn new(parameters: Vec<Rc<RefCell<Tensor<T>>>>, learning_rate: f32) -> SGD<T>{
         SGD{
@@ -24,7 +24,7 @@ where
 
 impl<T> Optimizer<T> for SGD<T>
 where
-    T: Float,
+    T: Num + Float + Clone,
 {
     fn step(&mut self) {
         println!("SGD step!");

@@ -1,4 +1,4 @@
-use num::Float;
+use num::{Num, Float};
 use crate::modules::Module;
 use crate::tensor::Tensor;
 use std::rc::Rc;
@@ -11,7 +11,7 @@ pub struct Sigmoid<T>{
 }
 
 impl<T> Sigmoid<T>
-where T: Float
+where T: Num + Float + Clone
 {
     pub fn new(input: &Rc<RefCell<Box<dyn Module<T>>>>,) -> Sigmoid<T>{
         let result = input.borrow().result().borrow().clone();
@@ -24,7 +24,7 @@ where T: Float
 }
 
 impl<T> Module<T> for Sigmoid<T>
-where T: Float
+where T: Num + Float + Clone
 {
     fn forward(&mut self){
         println!("forward for Sigmoid");

@@ -1,4 +1,4 @@
-use num::Float;
+use num::{Num, Float};
 use crate::tensor::Tensor;
 use crate::modules::Module;
 use std::rc::Rc;
@@ -10,7 +10,7 @@ pub struct NeuralNetwork<T>{
 }
 
 impl<T> NeuralNetwork<T>
-where T: Float
+where T: Num + Float + Clone
 {
     pub fn new() -> NeuralNetwork<T>{
         NeuralNetwork{
@@ -26,7 +26,7 @@ where T: Float
 
 impl<T> Module<T> for NeuralNetwork<T>
 where
-    T: Float,
+    T: Num + Float + Clone,
 {
     fn forward(&mut self){
         for module in &self.module_list{

@@ -1,9 +1,9 @@
 use crate::tensor::Tensor;
 use std::rc::Rc;
 use std::cell::RefCell;
-use num::Float;
+use num::{Num, Float};
 
-pub fn add<T: Float>(lhs: &Rc<RefCell<Tensor<T>>>,
+pub fn add<T: Num + Float + Clone>(lhs: &Rc<RefCell<Tensor<T>>>,
     rhs: &Rc<RefCell<Tensor<T>>>,
     out: &Rc<RefCell<Tensor<T>>>){
         let lhs = lhs.borrow();
@@ -40,15 +40,56 @@ pub fn add<T: Float>(lhs: &Rc<RefCell<Tensor<T>>>,
                     out.shape.capacity())
         }
 
-        let alpha: T = T::one();
-
         for i in 0..capacity{
-            out.longarray[i] = lhs.longarray[i].mul_add(alpha, rhs.longarray[i]);
+            out.longarray[i] = lhs.longarray[i] + rhs.longarray[i];
         }
 
 }
 
-pub fn matmul<T: Float>(lhs: &Rc<RefCell<Tensor<T>>>,
+pub fn sub<T: Num + Float + Clone>(lhs: &Rc<RefCell<Tensor<T>>>,
+    rhs: &Rc<RefCell<Tensor<T>>>,
+    out: &Rc<RefCell<Tensor<T>>>){
+        let lhs = lhs.borrow();
+        let rhs = rhs.borrow();
+        let mut out = out.borrow_mut();
+
+        if lhs.shape.rank != rhs.shape.rank{
+            panic!("lhs and rhs rank must be same, \
+                    but receive lhs shape rank {}, rhs shape rank {}.",
+                    lhs.shape.rank,
+                    rhs.shape.rank)
+        }
+
+        if lhs.shape.rank != out.shape.rank{
+            panic!("lhs and out rank must be same, \
+                    but receive lhs shape rank {}, out shape rank {}.",
+                    lhs.shape.rank,
+                    out.shape.rank)
+        }
+
+        let capacity = lhs.shape.capacity();
+
+        if capacity != rhs.shape.capacity(){
+            panic!("lhs and rhs capacity must be same, \
+                    but receive lhs shape capacity {}, rhs shape capacity {}.",
+                    capacity,
+                    rhs.shape.capacity())
+        }
+
+        if capacity!= out.shape.capacity(){
+            panic!("lhs and out capacity must be same, \
+                    but receive lhs shape capacity {}, out shape capacity {}.",
+                    capacity,
+                    out.shape.capacity())
+        }
+
+        for i in 0..capacity{
+            out.longarray[i] = lhs.longarray[i] - rhs.longarray[i];
+        }
+
+}
+
+pub fn matmul<T: Num + Float + Clone>(lhs: &Rc<RefCell<Tensor<T>>>,
     rhs: &Rc<RefCell<Tensor<T>>>,
     out: &Rc<RefCell<Tensor<T>>>){
         let lhs = lhs.borrow();
@@ -85,19 +126,18 @@ pub fn matmul<T: Float>(lhs: &Rc<RefCell<Tensor<T>>>,
         let in_features = rhs.shape.dim[0].clone();
         let out_features = out.shape.dim[0].clone();
 
-        let beta : T = T::zero();
-
         for out_idx in 0..out_features{
             out.longarray[out_idx] = T::zero();
             for in_idx in 0..in_features{
                 out.longarray[out_idx] = out.longarray[out_idx] +
-                        lhs.longarray[out_idx * in_features + in_idx].mul_add(rhs.longarray[in_idx], beta);
+                        (lhs.longarray[out_idx * in_features + in_idx] *
+                            rhs.longarray[in_idx]);
             }
         }
 
 }
 
-pub fn sigmoid<T: Float>(in_t: &Rc<RefCell<Tensor<T>>>,
+pub fn sigmoid<T: Num + Float + Clone>(in_t: &Rc<RefCell<Tensor<T>>>,
     out_t: &Rc<RefCell<Tensor<T>>>){
         let in_t = in_t.borrow();
         let mut out_t = out_t.borrow_mut();

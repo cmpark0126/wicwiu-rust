@@ -2,7 +2,7 @@ use std::fmt::{self, Display, Formatter, Debug};
 use std::ops::{Index,IndexMut};
 use std::rc::Rc;
 use std::cell::RefCell;
-use num::Float;
+use num::{Num, Float};
 use crate::shape::Shape;
 
 #[derive(Debug, Clone)]
@@ -13,7 +13,7 @@ pub struct Tensor<T>{
 }
 
 impl<T> Tensor<T>
-where T: Float
+where T: Num + Float + Clone
 {
     pub fn zeros(dim: Vec<usize>, requires_grad: bool) -> Tensor<T>{
         let shape = Shape::new(dim);
@@ -85,7 +85,7 @@ where T: Float
 }
 
 // impl<T> Display for Tensor<T>
-// where T: Float
+// where T: Num + Float + Clone
 // {
 //     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
 //         write!(f, "({:#?}, {:#?})", self.shape, self.longarray)
@@ -94,7 +94,7 @@ where T: Float
 
 // impl<T> Index<usize> for Tensor<T>
 // where
-//     T: Float
+//     T: Num + Float + Clone
 // {
 //     type Output = T;
 //
@@ -106,7 +106,7 @@ where T: Float
 //
 // impl<T> IndexMut<usize> for Tensor<T>
 // where
-//     T: Float
+//     T: Num + Float + Clone
 // {
 //     fn index_mut<'a>(&'a mut self, index: usize) -> &'a mut Self::Output {
 //         println!("Accessing {:?}-side of Tensor mutably", index);

@@ -1,9 +1,9 @@
-pub trait Floateric {
+pub trait Numeric {
     fn zero() -> Self;
     fn one() -> Self;
 }
 
-impl Floateric for i8{
+impl Numeric for i8{
     fn zero() -> Self{
         0 as Self
     }
@@ -11,7 +11,7 @@ impl Floateric for i8{
         1 as Self
     }
 }
-impl Floateric for i16{
+impl Numeric for i16{
     fn zero() -> Self{
         0 as Self
     }
@@ -19,7 +19,7 @@ impl Floateric for i16{
         1 as Self
     }
 }
-impl Floateric for i32{
+impl Numeric for i32{
     fn zero() -> Self{
         0 as Self
     }
@@ -27,7 +27,7 @@ impl Floateric for i32{
         1 as Self
     }
 }
-impl Floateric for i64{
+impl Numeric for i64{
     fn zero() -> Self{
         0 as Self
     }
@@ -35,7 +35,7 @@ impl Floateric for i64{
         1 as Self
     }
 }
-impl Floateric for f32{
+impl Numeric for f32{
     fn zero() -> Self{
         0 as Self
     }
@@ -43,7 +43,7 @@ impl Floateric for f32{
         1 as Self
     }
 }
-impl Floateric for f64{
+impl Numeric for f64{
     fn zero() -> Self{
         0 as Self
     }

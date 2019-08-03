@@ -1,5 +1,5 @@
 use crate::modules::Module;
-use num::Float;
+use num::{Num, Float};
 use crate::tensor::Tensor;
 use std::rc::Rc;
 use std::cell::RefCell;
@@ -17,7 +17,7 @@ pub struct Linear<T> {
 
 impl<T> Linear<T>
 where
-    T: Float + Sized,
+    T: Num + Float + Clone + Sized,
 {
     pub fn new(input: &Rc<RefCell<Box<dyn Module<T>>>>, in_features: usize, out_features: usize) -> Linear<T> {
         let weight = Tensor::<T>::zeros(vec![out_features, in_features], true);
@@ -36,7 +36,7 @@ where
 
 impl<T> Module<T> for Linear<T>
 where
-    T: Float,
+    T: Num + Float + Clone,
 {
     fn forward(&mut self) {
         println!("forward for Linear");
