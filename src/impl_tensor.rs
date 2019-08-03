@@ -2,8 +2,9 @@ use crate::tensor::Tensor;
 use std::rc::Rc;
 use std::cell::RefCell;
 use num::{Num, NumCast, Float, FromPrimitive};
+use std::fmt::Debug;
 
-pub fn add<T: Num + NumCast + Float + Clone + FromPrimitive>(
+pub fn add<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
     lhs: &Rc<RefCell<Tensor<T>>>,
     alpha: &T,
     rhs: &Rc<RefCell<Tensor<T>>>,
@@ -49,7 +50,7 @@ pub fn add<T: Num + NumCast + Float + Clone + FromPrimitive>(
 
 }
 
-pub fn matmul<T: Num + NumCast + Float + Clone + FromPrimitive>(
+pub fn matmul<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
     lhs: &Rc<RefCell<Tensor<T>>>,
     rhs: &Rc<RefCell<Tensor<T>>>,
     out: &Rc<RefCell<Tensor<T>>>){
@@ -98,7 +99,7 @@ pub fn matmul<T: Num + NumCast + Float + Clone + FromPrimitive>(
 
 }
 
-pub fn sigmoid<T: Num + NumCast + Float + Clone + FromPrimitive>(
+pub fn sigmoid<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
     in_t: &Rc<RefCell<Tensor<T>>>,
     out_t: &Rc<RefCell<Tensor<T>>>){
         let in_t = in_t.borrow();
@@ -127,7 +128,7 @@ pub fn sigmoid<T: Num + NumCast + Float + Clone + FromPrimitive>(
 
     }
 
-pub fn sum<T: Num + NumCast + Float + Clone + FromPrimitive>(
+pub fn sum<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
     in_t: &Rc<RefCell<Tensor<T>>>,
     out_t: &Rc<RefCell<Tensor<T>>>){
         let in_t = in_t.borrow();

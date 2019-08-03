@@ -3,14 +3,14 @@ use crate::tensor::Tensor;
 use crate::modules::Module;
 use std::rc::Rc;
 use std::cell::RefCell;
-use std::fmt::{Display, Debug};
+use std::fmt::Debug;
 
 pub struct NeuralNetwork<T>{
     pub module_list: Vec<Rc<RefCell<Box<dyn Module<T>>>>>,
 }
 
 impl<T> NeuralNetwork<T>
-where T: Num + NumCast + Float + Clone + FromPrimitive
+where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
 {
     pub fn new() -> NeuralNetwork<T>{
         NeuralNetwork{
@@ -26,7 +26,7 @@ where T: Num + NumCast + Float + Clone + FromPrimitive
 
 impl<T> Module<T> for NeuralNetwork<T>
 where
-    T: Num + NumCast + Float + Clone + FromPrimitive,
+    T: Num + NumCast + Float + Clone + FromPrimitive + Debug,
 {
     fn forward(&mut self){
         for module in &self.module_list{
@@ -39,6 +39,15 @@ where
 
     fn backward(&mut self){
         let len = self.module_list.len();
+
+        // fill gradient of last module of neural network 1.0
+        let last_module_result = ((&self.module_list[len - 1]).borrow()).result();
+        let mut last_module_result_t = last_module_result.borrow_mut();
+        let gradient = &last_module_result_t.gradient;
+        let initial_gradient = Tensor::ones_like(Rc::clone(gradient.as_ref().unwrap()));
+        last_module_result_t.gradient = Some(Rc::new(RefCell::new(initial_gradient)));
+        // drop ownership to allow other module can access this value
+        drop(last_module_result_t);
 
         for idx in (0..len).rev(){
             let mut module_mut = self.module_list[idx].borrow_mut();

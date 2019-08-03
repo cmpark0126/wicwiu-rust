@@ -4,7 +4,7 @@ use crate::impl_tensor::{add, sum};
 use crate::tensor::Tensor;
 use std::rc::Rc;
 use std::cell::RefCell;
-use std::fmt::{Display, Debug};
+use std::fmt::Debug;
 
 pub struct MSE<T>{
     inputs: Vec<Rc<RefCell<Box<dyn Module<T>>>>>,
@@ -12,7 +12,7 @@ pub struct MSE<T>{
 }
 
 impl<T> MSE<T>
-where T: Num + NumCast + Float + Clone + FromPrimitive
+where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
 {
     pub fn new(input: &Rc<RefCell<Box<dyn Module<T>>>>, target: &Rc<RefCell<Box<dyn Module<T>>>>) -> MSE<T>{
         // let t = ;
@@ -35,7 +35,7 @@ where T: Num + NumCast + Float + Clone + FromPrimitive
 }
 
 impl<T> Module<T> for MSE<T>
-where T: Num + NumCast + Float + Clone + FromPrimitive
+where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
 {
     fn forward(&mut self){
         println!("forward for MSE");
@@ -55,6 +55,10 @@ where T: Num + NumCast + Float + Clone + FromPrimitive
 
     fn backward(&mut self){
         println!("backward for MSE");
+        let result = &self.result.borrow();
+        let result_grad = result.gradient.as_ref().unwrap();
+        // println!("{:?}", result_grad.borrow());
+
     }
 
     fn result(&self) -> Rc<RefCell<Tensor<T>>> {

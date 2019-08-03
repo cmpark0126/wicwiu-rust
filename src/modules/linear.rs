@@ -4,7 +4,7 @@ use num::{Num, NumCast, Float, FromPrimitive};
 use crate::tensor::Tensor;
 use std::rc::Rc;
 use std::cell::RefCell;
-use std::fmt::{Debug, Display};
+use std::fmt::Debug;
 
 // #[derive(Debug)]
 pub struct Linear<T> {
@@ -18,7 +18,7 @@ pub struct Linear<T> {
 
 impl<T> Linear<T>
 where
-    T: Num + NumCast + Float + Clone + FromPrimitive,
+    T: Num + NumCast + Float + Clone + FromPrimitive + Debug,
 {
     pub fn new(input: &Rc<RefCell<Box<dyn Module<T>>>>, in_features: usize, out_features: usize) -> Linear<T> {
         let weight = Tensor::<T>::ones(vec![out_features, in_features], true);
@@ -37,7 +37,7 @@ where
 
 impl<T> Module<T> for Linear<T>
 where
-    T: Num + NumCast + Float + Clone + FromPrimitive,
+    T: Num + NumCast + Float + Clone + FromPrimitive + Debug,
 {
     fn forward(&mut self) {
         println!("forward for Linear");

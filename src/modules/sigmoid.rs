@@ -4,7 +4,7 @@ use crate::impl_tensor::sigmoid;
 use crate::tensor::Tensor;
 use std::rc::Rc;
 use std::cell::RefCell;
-use std::fmt::{Display, Debug};
+use std::fmt::Debug;
 
 pub struct Sigmoid<T>{
     inputs: Vec<Rc<RefCell<Box<dyn Module<T>>>>>,
@@ -12,7 +12,7 @@ pub struct Sigmoid<T>{
 }
 
 impl<T> Sigmoid<T>
-where T: Num + NumCast + Float + Clone + FromPrimitive
+where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
 {
     pub fn new(input: &Rc<RefCell<Box<dyn Module<T>>>>,) -> Sigmoid<T>{
         let result = input.borrow().result().borrow().clone();
@@ -25,7 +25,7 @@ where T: Num + NumCast + Float + Clone + FromPrimitive
 }
 
 impl<T> Module<T> for Sigmoid<T>
-where T: Num + NumCast + Float + Clone + FromPrimitive
+where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
 {
     fn forward(&mut self){
         println!("forward for Sigmoid");

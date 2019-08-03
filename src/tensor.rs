@@ -13,17 +13,11 @@ pub struct Tensor<T>{
 }
 
 impl<T> Tensor<T>
-where T: Num + NumCast + Float + Clone + FromPrimitive
+where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
 {
     pub fn zeros(dim: Vec<usize>, requires_grad: bool) -> Tensor<T>{
         let shape = Shape::new(dim);
-        let mut capacity = 1;
-
-        let dim = &shape.dim;
-
-        for i in dim {
-            capacity *= i;
-        }
+        let capacity = shape.capacity();
 
         let longarray : Vec<T> = vec![T::zero(); capacity];
         let mut gradient = None;
@@ -46,18 +40,60 @@ where T: Num + NumCast + Float + Clone + FromPrimitive
 
     pub fn ones(dim: Vec<usize>, requires_grad: bool) -> Tensor<T>{
         let shape = Shape::new(dim);
-        let mut capacity = 1;
-
-        let dim = &shape.dim;
-
-        for i in dim {
-            capacity *= i;
-        }
+        let capacity = shape.capacity();
 
         let longarray : Vec<T> = vec![T::one(); capacity];
         let mut gradient = None;
 
         if requires_grad == true{
+            let gredient_t = Tensor {
+                shape: shape.clone(),
+                longarray: vec![T::zero(); capacity],
+                gradient: None,
+            };
+            gradient = Some(Rc::new(RefCell::new(gredient_t)));
+        }
+
+        Tensor {
+            shape: shape,
+            longarray: longarray,
+            gradient: gradient,
+        }
+    }
+
+    pub fn zeros_like(src: Rc<RefCell<Tensor<T>>>) -> Tensor<T>{
+        let src = src.borrow();
+        let shape = src.shape.clone();
+        let capacity = shape.capacity();
+
+        let longarray : Vec<T> = vec![T::zero(); capacity];
+        let mut gradient = None;
+
+        if src.gradient.is_some() {
+            let gredient_t = Tensor {
+                shape: shape.clone(),
+                longarray: vec![T::zero(); capacity],
+                gradient: None,
+            };
+            gradient = Some(Rc::new(RefCell::new(gredient_t)));
+        }
+
+        Tensor {
+            shape: shape,
+            longarray: longarray,
+            gradient: gradient,
+        }
+    }
+
+    pub fn ones_like(src: Rc<RefCell<Tensor<T>>>) -> Tensor<T>{
+        let src = src.borrow();
+        let shape = src.shape.clone();
+        let capacity = shape.capacity();
+
+        let longarray : Vec<T> = vec![T::one(); capacity];
+        let mut gradient = None;
+
+        if src.gradient.is_some() {
             let gredient_t = Tensor {
                 shape: shape.clone(),
                 longarray: vec![T::zero(); capacity],
