@@ -38,4 +38,8 @@ where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
     fn is_tensorholder(&self) -> bool{
         true
     }
+
+    fn set_result(&mut self, result: Rc<RefCell<Tensor<T>>>){
+        self.tensor = result;
+    }
 }

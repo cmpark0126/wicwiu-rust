@@ -12,8 +12,12 @@ pub trait Module<T> {
     fn parameters(&self) -> Vec<Rc<RefCell<Tensor<T>>>>{
         vec![]
     }
-    
+
     fn is_tensorholder(&self) -> bool{
         false
+    }
+
+    fn set_result(&mut self, result: Rc<RefCell<Tensor<T>>>){
+        panic!("Only for tensorholder");
     }
 }
