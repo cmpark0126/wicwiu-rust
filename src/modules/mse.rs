@@ -86,8 +86,4 @@ where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
     fn result(&self) -> Rc<RefCell<Tensor<T>>> {
         Rc::clone(&self.result)
     }
-
-    // fn result_mut(&mut self) -> &mut Tensor<T>{
-    //     &mut self.result
-    // }
 }
