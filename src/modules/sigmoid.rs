@@ -28,7 +28,7 @@ impl<T> Module<T> for Sigmoid<T>
 where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
 {
     fn forward(&mut self){
-        println!("forward for Sigmoid");
+        // println!("forward for Sigmoid");
         let input = &((&self.inputs[0]).borrow()).result();
         let result = &self.result;
 
@@ -36,7 +36,7 @@ where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
     }
 
     fn backward(&mut self){
-        println!("backward for Sigmoid");
+        // println!("backward for Sigmoid");
         let result = &self.result;
         let result_t = &result.borrow();
         let result_grad = result_t.gradient.as_ref().unwrap();

@@ -46,7 +46,7 @@ where
     T: Num + NumCast + Float + Clone + FromPrimitive + Debug,
 {
     fn forward(&mut self) {
-        println!("forward for Linear");
+        // println!("forward for Linear");
         let input = &((&self.inputs[0]).borrow()).result();
         let weight = &self.weight;
         let bias = &self.bias;
@@ -58,7 +58,7 @@ where
     }
 
     fn backward(&mut self) {
-        println!("backward for Linear");
+        // println!("backward for Linear");
         let result = &self.result;
         let result_t = &result.borrow();
         let result_grad = result_t.gradient.as_ref().unwrap();

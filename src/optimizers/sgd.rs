@@ -28,7 +28,7 @@ where
     T: Num + NumCast + Float + Clone + FromPrimitive + Debug,
 {
     fn step(&mut self) {
-        println!("SGD step!");
+        // println!("SGD step!");
 
         let lr : &T = &T::from_f32(-1.0 * self.learning_rate).unwrap();
         let alpha : &T = &T::from_f32(1.0).unwrap();
@@ -44,7 +44,7 @@ where
     }
 
     fn zero_grad(&mut self) {
-        println!("SGD grad_zero!");
+        // println!("SGD grad_zero!");
 
         for p in &self.parameters{
             let p = &p;

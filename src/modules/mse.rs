@@ -52,7 +52,7 @@ impl<T> Module<T> for MSE<T>
 where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
 {
     fn forward(&mut self){
-        println!("forward for MSE");
+        // println!("forward for MSE");
 
         let input = &((&self.inputs[0]).borrow()).result();
         let target = &((&self.inputs[1]).borrow()).result();
@@ -70,7 +70,7 @@ where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
     }
 
     fn backward(&mut self){
-        println!("backward for MSE");
+        // println!("backward for MSE");
         let result = &self.result;
         let result_t = result.borrow();
         let result_grad = result_t.gradient.as_ref().unwrap();
