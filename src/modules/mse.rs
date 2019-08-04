@@ -63,7 +63,7 @@ where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
         let alpha : &T = &T::from_f32(1.0).unwrap();
         let beta : &T = &T::from_f32(-1.0).unwrap();
 
-        add(input, alpha, target, beta, subtract);
+        add(target, alpha, input, beta, subtract);
         square(subtract, squred);
         sum(squred, result); // in this time, I did not use * 0.5. I will fix this algo.
 

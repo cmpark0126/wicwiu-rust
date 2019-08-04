@@ -35,7 +35,7 @@ where
 
         for p in &self.parameters{
             let p = &p;
-            let mut p_t = p.borrow_mut();
+            let p_t = p.borrow();
             let p_g = &Rc::new(RefCell::new(p_t.gradient.as_ref().unwrap().borrow().clone()));
             drop(p_t);
 
