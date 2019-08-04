@@ -42,4 +42,17 @@ where
             add_(p, alpha, p_g, lr);
         }
     }
+
+    fn zero_grad(&mut self) {
+        println!("SGD grad_zero!");
+
+        for p in &self.parameters{
+            let p = &p;
+            let mut p_t = p.borrow_mut();
+            let gradient = &p_t.gradient;
+            let reset_gradient = Tensor::zeros_like(Rc::clone(gradient.as_ref().unwrap()));
+            p_t.gradient = Some(Rc::new(RefCell::new(reset_gradient)));
+            drop(p_t);
+        }
+    }
 }
