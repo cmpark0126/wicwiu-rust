@@ -50,30 +50,24 @@ fn main() {
 
     let x_ref = nn.push(Box::new(x));
     let t_ref = nn.push(Box::new(t));
-    let linear1 = nn.push(Box::new(Linear::<dtype!()>::new(&x_ref, 2, 3)));
+    let linear1 = nn.push(Box::new(Linear::<dtype!()>::new(&x_ref, 2, 5)));
     let act1 = nn.push(Box::new(Sigmoid::<dtype!()>::new(&linear1)));
-    let linear2 = nn.push(Box::new(Linear::<dtype!()>::new(&act1, 3, 2)));
+    let linear2 = nn.push(Box::new(Linear::<dtype!()>::new(&act1, 5, 2)));
     let act2 = nn.push(Box::new(Sigmoid::<dtype!()>::new(&linear2)));
     let mse = nn.push(Box::new(MSE::<dtype!()>::new(&act2, &t_ref)));
 
-    let optim: &mut Optimizer<dtype!()> = &mut SGD::new(nn.parameters(), 0.001);
-    let cnt : usize = 0;
+    let optim: &mut Optimizer<dtype!()> = &mut SGD::new(nn.parameters(), 0.1);
+    let mut cnt : usize = 0;
 
     // train
     loop{
-        let case_num = cnt % 4;
+        let case_num = 0;
         {
             let (g_i, g_t) = create_xor_input(case_num);
-
             let mut input_ref = x_ref.borrow_mut();
             input_ref.set_result(g_i);
-            // let input_result = input_ref.result();
-            // println!("{:?}", input_result);
-
             let mut target_ref = t_ref.borrow_mut();
             target_ref.set_result(g_t);
-            // let target_result = target_ref.result();
-            // println!("{:?}", target_result);
         }
         optim.zero_grad();
         nn.forward();
@@ -82,7 +76,33 @@ fn main() {
 
         print!("loss {:?}, \r", mse.borrow().result().borrow().longarray);
 
-        if cnt == 1000 {
+        cnt += 1;
+
+        if cnt == 100000 {
+            break;
+        }
+    }
+
+    println!("");
+
+    cnt = 0;
+
+    loop{
+        let case_num = 0;
+        {
+            let (g_i, g_t) = create_xor_input(case_num);
+            let mut input_ref = x_ref.borrow_mut();
+            input_ref.set_result(g_i);
+            let mut target_ref = t_ref.borrow_mut();
+            target_ref.set_result(g_t);
+        }
+
+        nn.forward();
+        println!("loss {:?}", act2.borrow().result().borrow().longarray);
+
+        cnt += 1;
+
+        if cnt == 4 {
             break;
         }
     }
