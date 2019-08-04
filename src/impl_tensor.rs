@@ -51,6 +51,36 @@ pub fn add<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
 
 }
 
+pub fn add_<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
+    lhs: &Rc<RefCell<Tensor<T>>>,
+    alpha: &T,
+    rhs: &Rc<RefCell<Tensor<T>>>,
+    beta: &T) {
+        let mut lhs = lhs.borrow_mut();
+        let rhs = rhs.borrow();
+
+        if lhs.shape.rank != rhs.shape.rank{
+            panic!("lhs and rhs rank must be same, \
+                    but receive lhs shape rank {}, rhs shape rank {}.",
+                    lhs.shape.rank,
+                    rhs.shape.rank)
+        }
+
+        let capacity = lhs.shape.capacity();
+
+        if capacity != rhs.shape.capacity(){
+            panic!("lhs and rhs capacity must be same, \
+                    but receive lhs shape capacity {}, rhs shape capacity {}.",
+                    capacity,
+                    rhs.shape.capacity())
+        }
+
+        for i in 0..capacity{
+            lhs.longarray[i] = (*alpha * lhs.longarray[i]) +
+                                (*beta * rhs.longarray[i]);
+        }
+}
+
 pub fn mul_with_constant<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
     lhs: &Rc<RefCell<Tensor<T>>>,
     alpha: &T,

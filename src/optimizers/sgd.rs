@@ -1,6 +1,7 @@
 use crate::optimizers::Optimizer;
 use num::{Num, NumCast, Float, FromPrimitive};
 use crate::tensor::Tensor;
+use crate::impl_tensor::add_;
 use std::rc::Rc;
 use std::cell::RefCell;
 use std::fmt::Debug;
@@ -35,10 +36,12 @@ where
         for p in &self.parameters{
             let p = &p;
             let mut p_t = p.borrow_mut();
-            let p_g = p_t.gradient.as_ref().unwrap().borrow();
+            let p_g = &Rc::new(RefCell::new(p_t.gradient.as_ref().unwrap().borrow().clone()));
+            drop(p_t);
 
-            // this case we can calculate sgd in here, I will change this ambiguousity
-
+            println!("{:?}", p);
+            add_(p, alpha, p_g, lr);
+            println!("{:?}", p);
         }
     }
 }
