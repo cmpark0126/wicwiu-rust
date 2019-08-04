@@ -39,9 +39,7 @@ where
             let p_g = &Rc::new(RefCell::new(p_t.gradient.as_ref().unwrap().borrow().clone()));
             drop(p_t);
 
-            println!("{:?}", p);
             add_(p, alpha, p_g, lr);
-            println!("{:?}", p);
         }
     }
 }
