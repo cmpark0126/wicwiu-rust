@@ -43,11 +43,14 @@ fn create_xor_input(case: usize) -> (Rc<RefCell<Tensor<dtype!()>>>, Rc<RefCell<T
 }
 
 fn main() {
+    // Prepare input placeholder
     let x = Tensorholder::<dtype!()>::new(vec![2]);
     let t = Tensorholder::<dtype!()>::new(vec![2]);
+
+    // Prepare empty Neural Network
     let mut nn = NeuralNetwork::<dtype!()>::new();
 
-
+    // Construct MLP
     let x_ref = nn.push(Box::new(x));
     let t_ref = nn.push(Box::new(t));
     let linear1 = nn.push(Box::new(Linear::<dtype!()>::new(&x_ref, 2, 4)));
@@ -56,11 +59,13 @@ fn main() {
     let act2 = nn.push(Box::new(Sigmoid::<dtype!()>::new(&linear2)));
     let mse = nn.push(Box::new(MSE::<dtype!()>::new(&act2, &t_ref)));
 
+    // Prepare Optimizer; we use SGD
     let optim: &mut Optimizer<dtype!()> = &mut SGD::new(nn.parameters(), 0.005);
+
     let mut cnt : usize = 0;
 
-    // train
-    println!("Start train!");
+    // Train Neural Network
+    println!("Train!");
     loop{
         let case_num = cnt % 4;
         {
@@ -86,14 +91,13 @@ fn main() {
         cnt += 1;
 
         if cnt == 1000000 {
+            println!("");
             break;
         }
     }
 
-    println!("");
-
     cnt = 0;
-
+    // Test trained Neural Network
     println!("Test");
     loop{
         println!("====================================");
