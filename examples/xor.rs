@@ -60,6 +60,7 @@ fn main() {
     let mut cnt : usize = 0;
 
     // train
+    println!("Start train!");
     loop{
         let case_num = cnt % 4;
         {
@@ -93,7 +94,9 @@ fn main() {
 
     cnt = 0;
 
+    println!("Test");
     loop{
+        println!("====================================");
         let case_num = cnt % 4;
         {
             let (g_i, g_t) = create_xor_input(case_num);
