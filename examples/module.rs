@@ -57,7 +57,7 @@ fn main() {
     let act2 = nn.push(Box::new(Sigmoid::<dtype!()>::new(&linear2)));
     let mse = nn.push(Box::new(MSE::<dtype!()>::new(&act2, &t_ref)));
 
-    let optim: &mut Optimizer<dtype!()> = &mut SGD::new(nn.parameters(), 0.001);
+    let optim: &mut Optimizer<dtype!()> = &mut SGD::new(nn.parameters(), 0.005);
     let mut cnt : usize = 0;
 
     // train
