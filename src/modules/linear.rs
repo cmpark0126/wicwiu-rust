@@ -1,11 +1,12 @@
 use crate::modules::Module;
-use crate::impl_tensor::{matmul, add, mul_with_constant,
+use crate::impl_tensor::{matmul, add, mul_with_constant, mul_with_constant_remain_out,
                         matmul_backward_input, matmul_backward_weight};
 use num::{Num, NumCast, Float, FromPrimitive};
 use crate::tensor::Tensor;
 use std::rc::Rc;
 use std::cell::RefCell;
 use std::fmt::Debug;
+use crate::initializer::*;
 
 // #[derive(Debug)]
 pub struct Linear<T> {
@@ -25,7 +26,8 @@ where
     pub fn new(input: &Rc<RefCell<Box<dyn Module<T>>>>,
                 in_features: usize,
                 out_features: usize) -> Linear<T> {
-        let weight = Tensor::<T>::ones(vec![out_features, in_features], true);
+        let mut weight = Tensor::<T>::ones(vec![out_features, in_features], true);
+        random_initializer(&mut weight, in_features);
         let middle_result = Tensor::<T>::zeros(vec![out_features], true);
         let bias = Tensor::<T>::zeros(vec![out_features], true);
         let result = Tensor::<T>::zeros(vec![out_features], true);
@@ -75,7 +77,7 @@ where
         let bias_t = &bias.borrow();
         let bias_grad = bias_t.gradient.as_ref().unwrap();
 
-        mul_with_constant(result_grad, &T::one(), bias_grad);
+        mul_with_constant_remain_out(result_grad, &T::one(), bias_grad);
         mul_with_constant(result_grad, &T::one(), middle_result_grad);
         // if input is tensorholder, we don't need to run backward algorithm on this case
         if !((&self.inputs[0]).borrow()).is_tensorholder(){

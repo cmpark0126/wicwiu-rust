@@ -109,6 +109,34 @@ pub fn mul_with_constant<T: Num + NumCast + Float + Clone + FromPrimitive + Debu
         }
 }
 
+pub fn mul_with_constant_remain_out<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
+    lhs: &Rc<RefCell<Tensor<T>>>,
+    alpha: &T,
+    out: &Rc<RefCell<Tensor<T>>>){
+        let lhs = lhs.borrow();
+        let mut out = out.borrow_mut();
+
+        if lhs.shape.rank != out.shape.rank{
+            panic!("lhs and out rank must be same, \
+                    but receive lhs shape rank {}, out shape rank {}.",
+                    lhs.shape.rank,
+                    out.shape.rank)
+        }
+
+        let capacity = lhs.shape.capacity();
+
+        if capacity!= out.shape.capacity(){
+            panic!("lhs and out capacity must be same, \
+                    but receive lhs shape capacity {}, out shape capacity {}.",
+                    capacity,
+                    out.shape.capacity())
+        }
+
+        for i in 0..capacity{
+            out.longarray[i] = out.longarray[i] + *alpha * lhs.longarray[i];
+        }
+}
+
 pub fn matmul<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
     lhs: &Rc<RefCell<Tensor<T>>>,
     rhs: &Rc<RefCell<Tensor<T>>>,
