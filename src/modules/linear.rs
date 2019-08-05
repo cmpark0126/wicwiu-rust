@@ -29,7 +29,8 @@ where
         let mut weight = Tensor::<T>::ones(vec![out_features, in_features], true);
         random_initializer(&mut weight, in_features);
         let middle_result = Tensor::<T>::zeros(vec![out_features], true);
-        let bias = Tensor::<T>::zeros(vec![out_features], true);
+        let mut bias = Tensor::<T>::ones(vec![out_features], true);
+        random_initializer(&mut bias, in_features);
         let result = Tensor::<T>::zeros(vec![out_features], true);
         Linear {
             inputs: vec![Rc::clone(input)],
@@ -92,5 +93,9 @@ where
 
     fn parameters(&self) -> Vec<Rc<RefCell<Tensor<T>>>>{
         vec![Rc::clone(&self.weight), Rc::clone(&self.bias),]
+    }
+
+    fn set_result(&mut self, result: Rc<RefCell<Tensor<T>>>){
+        self.result = result;
     }
 }

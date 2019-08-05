@@ -4,6 +4,7 @@ use wicwiu::modules::*;
 use wicwiu::tensor::Tensor;
 use std::rc::Rc;
 use std::cell::RefCell;
+use std::io;
 
 macro_rules! dtype {
     () => (f32);
@@ -50,18 +51,18 @@ fn main() {
 
     let x_ref = nn.push(Box::new(x));
     let t_ref = nn.push(Box::new(t));
-    let linear1 = nn.push(Box::new(Linear::<dtype!()>::new(&x_ref, 2, 5)));
+    let linear1 = nn.push(Box::new(Linear::<dtype!()>::new(&x_ref, 2, 4)));
     let act1 = nn.push(Box::new(Sigmoid::<dtype!()>::new(&linear1)));
-    let linear2 = nn.push(Box::new(Linear::<dtype!()>::new(&act1, 5, 2)));
+    let linear2 = nn.push(Box::new(Linear::<dtype!()>::new(&act1, 4, 2)));
     let act2 = nn.push(Box::new(Sigmoid::<dtype!()>::new(&linear2)));
     let mse = nn.push(Box::new(MSE::<dtype!()>::new(&act2, &t_ref)));
 
-    let optim: &mut Optimizer<dtype!()> = &mut SGD::new(nn.parameters(), 0.1);
+    let optim: &mut Optimizer<dtype!()> = &mut SGD::new(nn.parameters(), 0.001);
     let mut cnt : usize = 0;
 
     // train
     loop{
-        let case_num = 0;
+        let case_num = cnt % 4;
         {
             let (g_i, g_t) = create_xor_input(case_num);
             let mut input_ref = x_ref.borrow_mut();
@@ -69,16 +70,27 @@ fn main() {
             let mut target_ref = t_ref.borrow_mut();
             target_ref.set_result(g_t);
         }
-        optim.zero_grad();
+
         nn.forward();
         nn.backward();
-        optim.step();
 
-        print!("loss {:?}, \r", mse.borrow().result().borrow().longarray);
+        // let mut guess = String::new();
+        //
+        // io::stdin().read_line(&mut guess)
+        //     .expect("Failed to read line");
+
+        if case_num == 3{
+            optim.step();
+            optim.zero_grad();
+        }
+
+        if cnt % 1000 == 0{
+            print!("loss {:?}, cnt: {}, \r", mse.borrow().result().borrow().longarray, cnt);
+        }
 
         cnt += 1;
 
-        if cnt == 100000 {
+        if cnt == 1000000 {
             break;
         }
     }
@@ -88,7 +100,7 @@ fn main() {
     cnt = 0;
 
     loop{
-        let case_num = 0;
+        let case_num = cnt % 4;
         {
             let (g_i, g_t) = create_xor_input(case_num);
             let mut input_ref = x_ref.borrow_mut();

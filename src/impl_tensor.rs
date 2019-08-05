@@ -275,6 +275,7 @@ pub fn matmul_backward_weight<T: Num + NumCast + Float + Clone + FromPrimitive +
         for out_idx in 0..out_features{
             for in_idx in 0..in_features{
                 grad.longarray[out_idx * in_features + in_idx] =
+                    grad.longarray[out_idx * in_features + in_idx] +
                     delta.longarray[out_idx] * input.longarray[in_idx];
             }
         }
@@ -302,8 +303,10 @@ pub fn sigmoid<T: Num + NumCast + Float + Clone + FromPrimitive + Debug>(
                     out_t.shape.capacity())
         }
 
+        let beta : T = T::from_f32(-1.0).unwrap();
+
         for i in 0..capacity{
-            let divider = in_t.longarray[i].exp() + T::one();
+            let divider = (beta * in_t.longarray[i]).exp() + T::one();
             out_t.longarray[i] = divider.recip();
         }
 

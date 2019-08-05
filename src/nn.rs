@@ -32,6 +32,9 @@ where
         for module in &self.module_list{
             let mut module_mut = module.borrow_mut();
             if module_mut.is_tensorholder() == false {
+                let result_t = &module_mut.result();
+                let reset_result_t = Tensor::zeros_like(Rc::clone(result_t));
+                module_mut.set_result(Rc::new(RefCell::new(reset_result_t)));
                 module_mut.forward();
             }
         }
@@ -54,6 +57,13 @@ where
             if module_mut.is_tensorholder() == false {
                 module_mut.backward();
             }
+            // let result_t = module_mut.result();
+            // println!("data: {:?}", result_t.borrow().longarray);
+            // println!("gradient: {:?}", result_t.borrow().gradient.as_ref().unwrap().borrow().longarray);
+            // for p in module_mut.parameters(){
+            //     println!("p_data: {:?}", p.borrow().longarray);
+            //     println!("p_gradient: {:?}", p.borrow().gradient.as_ref().unwrap().borrow().longarray);
+            // }
         }
     }
 
