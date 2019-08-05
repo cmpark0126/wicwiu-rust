@@ -63,10 +63,14 @@ where T: Num + NumCast + Float + Clone + FromPrimitive + Debug
         let alpha : &T = &T::from_f32(1.0).unwrap();
         let beta : &T = &T::from_f32(-1.0).unwrap();
 
-        add(target, alpha, input, beta, subtract);
+        add(input, alpha, target, beta, subtract);
         square(subtract, squred);
         sum(squred, result); // in this time, I did not use * 0.5. I will fix this algo.
 
+        let divisor : T = T::from_usize(2).unwrap();
+
+        let mut result = result.borrow_mut();
+        result.longarray[0] = result.longarray[0] / divisor;
     }
 
     fn backward(&mut self){
