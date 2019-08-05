@@ -104,7 +104,8 @@ fn main() {
         }
 
         nn.forward();
-        println!("loss {:?}", act2.borrow().result().borrow().longarray);
+        println!("input {:?}", x_ref.borrow().result().borrow().longarray);
+        println!("result {:?}", act2.borrow().result().borrow().longarray);
 
         cnt += 1;
 
