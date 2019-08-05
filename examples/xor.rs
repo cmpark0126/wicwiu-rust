@@ -4,7 +4,6 @@ use wicwiu::modules::*;
 use wicwiu::tensor::Tensor;
 use std::rc::Rc;
 use std::cell::RefCell;
-use std::io;
 
 macro_rules! dtype {
     () => (f32);
