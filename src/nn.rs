@@ -32,9 +32,9 @@ where
         for module in &self.module_list{
             let mut module_mut = module.borrow_mut();
             if module_mut.is_tensorholder() == false {
-                let result_t = &module_mut.result();
-                let reset_result_t = Tensor::zeros_like(Rc::clone(result_t));
-                module_mut.set_result(Rc::new(RefCell::new(reset_result_t)));
+                // let result_t = &module_mut.result();
+                // let reset_result_t = Tensor::zeros_like(Rc::clone(result_t));
+                // module_mut.set_result(Rc::new(RefCell::new(reset_result_t)));
                 module_mut.forward();
             }
         }

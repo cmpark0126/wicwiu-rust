@@ -73,11 +73,6 @@ fn main() {
         nn.forward();
         nn.backward();
 
-        // let mut guess = String::new();
-        //
-        // io::stdin().read_line(&mut guess)
-        //     .expect("Failed to read line");
-
         if case_num == 3{
             optim.step();
             optim.zero_grad();
